@@ -32,6 +32,10 @@ public class TestRetrieve {
 
                 // Access associated sports
                 List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
+                System.out.println("le user "+ utilisateur.getPrenom()+"pratique comme sport");
+                for (Sport sport : sportsPratiques){
+                    System.out.println(sport.getNom());
+                }
                 System.out.println("\nSports pratiques:");
                 for (Sport sport : sportsPratiques) {
                     if (sport instanceof Cyclisme) {
@@ -40,9 +44,9 @@ public class TestRetrieve {
                                 ", Temps de Performance: " + cyclisme.getTempsPerformance());
                     } if(sport instanceof CourseAPied) {
                         CourseAPied cap = (CourseAPied) sport;
-                        System.out.println("Cyclisme - Distance: " + cap.getDistanceParcourue() +
+                        System.out.println("Course a pied - Distance: " + cap.getDistanceParcourue() +
                                 ", Temps de Performance: " + cap.getTempsPerformance()+"nbr de seances : "+cap.getNombreSeancesEntrainement());
-                        // Handle other sports if needed
+                        
                     }
                 }
             } else {

@@ -19,6 +19,10 @@ public class Cyclisme extends Sport {
     /**
      * @return the distanceTotaleParcourue
      */
+        @Override
+       public String getNom() {
+        return "Cyclisme";
+    }
     public double getDistanceTotaleParcourue() {
         return distanceTotaleParcourue;
     }

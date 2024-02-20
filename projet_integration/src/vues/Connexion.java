@@ -5,6 +5,12 @@
  */
 package vue;
 
+import javax.swing.JOptionPane;
+import org.hibernate.Session;
+import modele.*;
+import org.hibernate.Transaction;
+import vues.Profil;
+
 /**
  *
  * @author Sabine
@@ -29,7 +35,7 @@ public class Connexion extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        logo = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         formSection = new javax.swing.JPanel();
         exitCurseur = new javax.swing.JLabel();
         connexionText = new javax.swing.JLabel();
@@ -54,11 +60,11 @@ public class Connexion extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(143, 143, 143));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pdiLogo.png"))); // NOI18N
-        jPanel1.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 35, 500, 340));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Mask_group.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 440));
 
@@ -69,7 +75,7 @@ public class Connexion extends javax.swing.JFrame {
         exitCurseur.setForeground(new java.awt.Color(255, 255, 255));
         exitCurseur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         exitCurseur.setText("x");
-        exitCurseur.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exitCurseur.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         exitCurseur.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 exitCurseurMouseClicked(evt);
@@ -107,13 +113,13 @@ public class Connexion extends javax.swing.JFrame {
         mdpOublie.setForeground(new java.awt.Color(199, 226, 255));
         mdpOublie.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         mdpOublie.setText("Mot de passe oublié ?");
-        mdpOublie.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mdpOublie.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         formSection.add(mdpOublie, new org.netbeans.lib.awtextra.AbsoluteConstraints(254, 261, 121, 27));
 
         connexionbutton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         connexionbutton.setForeground(new java.awt.Color(25, 149, 173));
         connexionbutton.setText("Connexion");
-        connexionbutton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        connexionbutton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         connexionbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connexionbuttonActionPerformed(evt);
@@ -124,7 +130,7 @@ public class Connexion extends javax.swing.JFrame {
         inscription.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         inscription.setForeground(new java.awt.Color(255, 255, 255));
         inscription.setText("S'inscrire");
-        inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 122, -1));
 
         inscritText.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -174,7 +180,25 @@ public class Connexion extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void connexionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionbuttonActionPerformed
-        // TODO add your handling code here:
+        if(pseudo.getText().isEmpty()|| mdp.getText().isEmpty()){
+//            JOptionPane.showMessageDialog(this, "CHAMP OBLIGATOIRE");
+            JOptionPane.showMessageDialog(this, "champ obligatioire", "ERREUR", JOptionPane.ERROR_MESSAGE);
+        }else{
+            Session s = DBConnection.getSession();
+            Transaction transaction = s.beginTransaction();
+            User userExist = UserDataConnect.getUserByUsernameAndPassword(pseudo.getText(), mdp.getText());
+            if(userExist!=null){
+                JOptionPane.showMessageDialog(this, "Bienvenue\n"+userExist.getPrenom());
+                Profil p = new Profil(userExist);
+                p.setVisible(true);
+                
+                setVisible(false);
+                      
+            }else {
+                JOptionPane.showMessageDialog(this, "Pseudo ou mot de passe inexistant !", "ERREUR", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
     }//GEN-LAST:event_connexionbuttonActionPerformed
 
     private void mdpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdpActionPerformed
@@ -230,10 +254,10 @@ public class Connexion extends javax.swing.JFrame {
     private javax.swing.JPanel formSection;
     private javax.swing.JLabel inscription;
     private javax.swing.JLabel inscritText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel logo;
     private javax.swing.JPasswordField mdp;
     private javax.swing.JLabel mdpIcon;
     private javax.swing.JLabel mdpOublie;

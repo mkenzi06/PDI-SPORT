@@ -3,7 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vue;
+package vues;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,9 +20,72 @@ public class Inscription extends javax.swing.JFrame {
      */
     public Inscription() {
         initComponents();
-        
-    }
+        cyclisme.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
 
+
+        });
+        
+        course.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
+        });
+        
+        tennis.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
+        });
+        
+        natation.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
+        });
+        
+        plancheavoile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
+        });
+        
+        halterophilie.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                gestionNombreCasesCochées();
+            }
+        });
+
+    }
+    private void gestionNombreCasesCochées() {
+        int nombreCasesActuelles = (cyclisme.isSelected() ? 1 : 0) +
+                                    (course.isSelected() ? 1 : 0) +
+                                    (tennis.isSelected() ? 1 : 0) +
+                                    (natation.isSelected() ? 1 : 0) +
+                                    (plancheavoile.isSelected() ? 1 : 0) +
+                                    (halterophilie.isSelected() ? 1 : 0);
+        
+        if (nombreCasesActuelles > 3) {
+            JOptionPane.showMessageDialog(this, "Vous ne pouvez sélectionner que trois sports au maximum.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            // Annuler la sélection de la dernière case cochée
+            if (cyclisme.isSelected()) {
+                cyclisme.setSelected(false);
+            } else if (course.isSelected()) {
+                course.setSelected(false);
+            } else if (tennis.isSelected()) {
+                tennis.setSelected(false);
+            } else if (natation.isSelected()) {
+                natation.setSelected(false);
+            } else if (plancheavoile.isSelected()) {
+                plancheavoile.setSelected(false);
+            } else if (halterophilie.isSelected()) {
+                halterophilie.setSelected(false);
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,8 +96,8 @@ public class Inscription extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        logo = new javax.swing.JLabel();
         connexionText = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         formSection = new javax.swing.JPanel();
         exitCurseur = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -42,9 +109,6 @@ public class Inscription extends javax.swing.JFrame {
         pseudo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         pseudo1 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        mdp1 = new javax.swing.JPasswordField();
-        mdp2 = new javax.swing.JPasswordField();
         selectsport = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         cyclisme = new javax.swing.JCheckBox();
@@ -53,6 +117,9 @@ public class Inscription extends javax.swing.JFrame {
         natation = new javax.swing.JCheckBox();
         plancheavoile = new javax.swing.JCheckBox();
         halterophilie = new javax.swing.JCheckBox();
+        jLabel10 = new javax.swing.JLabel();
+        mdp3 = new javax.swing.JPasswordField();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -63,17 +130,17 @@ public class Inscription extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(143, 143, 143));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pdiLogo.png"))); // NOI18N
-        jPanel1.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 500, 200));
-
-        connexionText.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
-        connexionText.setForeground(new java.awt.Color(52, 58, 64));
+        connexionText.setFont(new java.awt.Font("Baskerville Old Face", 0, 32)); // NOI18N
+        connexionText.setForeground(new java.awt.Color(255, 255, 255));
         connexionText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         connexionText.setText("Créer un nouveau compte");
-        jPanel1.add(connexionText, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 420, 41));
+        jPanel1.add(connexionText, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 420, 41));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Mask_group.png"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 440));
 
@@ -84,7 +151,7 @@ public class Inscription extends javax.swing.JFrame {
         exitCurseur.setForeground(new java.awt.Color(255, 255, 255));
         exitCurseur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         exitCurseur.setText("x");
-        exitCurseur.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exitCurseur.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         exitCurseur.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 exitCurseurMouseClicked(evt);
@@ -99,13 +166,13 @@ public class Inscription extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(199, 226, 255));
-        jLabel8.setText("Mot de passe");
+        jLabel8.setText("Confirmer votre mot de passe");
         formSection.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 341, -1));
 
         inscriptionbutton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inscriptionbutton.setForeground(new java.awt.Color(25, 149, 173));
         inscriptionbutton.setText("Inscription");
-        inscriptionbutton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inscriptionbutton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         inscriptionbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inscriptionbuttonActionPerformed(evt);
@@ -116,7 +183,7 @@ public class Inscription extends javax.swing.JFrame {
         inscription.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         inscription.setForeground(new java.awt.Color(255, 255, 255));
         inscription.setText("Se connecter");
-        inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, 122, -1));
 
         inscritText.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -151,25 +218,6 @@ public class Inscription extends javax.swing.JFrame {
         });
         formSection.add(pseudo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 160, 30));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(199, 226, 255));
-        jLabel9.setText("Email");
-        formSection.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 341, -1));
-
-        mdp1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mdp1ActionPerformed(evt);
-            }
-        });
-        formSection.add(mdp1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 340, 30));
-
-        mdp2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mdp2ActionPerformed(evt);
-            }
-        });
-        formSection.add(mdp2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 340, 30));
-
         selectsport.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         selectsport.setForeground(new java.awt.Color(199, 226, 255));
         selectsport.setText("Selectionner les sports");
@@ -189,6 +237,7 @@ public class Inscription extends javax.swing.JFrame {
         });
         formSection.add(cyclisme, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, -1, -1));
 
+        course.setBackground(new java.awt.Color(0, 51, 255));
         course.setForeground(new java.awt.Color(255, 255, 255));
         course.setText("Course à pied");
         course.addActionListener(new java.awt.event.ActionListener() {
@@ -234,6 +283,25 @@ public class Inscription extends javax.swing.JFrame {
         });
         formSection.add(halterophilie, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 290, -1, -1));
 
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(199, 226, 255));
+        jLabel10.setText("Mot de passe");
+        formSection.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 341, -1));
+
+        mdp3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mdp3ActionPerformed(evt);
+            }
+        });
+        formSection.add(mdp3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 340, 30));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        formSection.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 116, 340, 30));
+
         getContentPane().add(formSection, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, 420, 440));
 
         setSize(new java.awt.Dimension(916, 438));
@@ -245,20 +313,24 @@ public class Inscription extends javax.swing.JFrame {
     }//GEN-LAST:event_exitCurseurMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        for (double i = 0.0; i <=1.0; i = i+0.1){
-            String val = i+ "";
+        for (double i = 0.0; i <= 1.0; i = i + 0.1) {
+            String val = i + "";
             float f = Float.valueOf(val);
             this.setOpacity(f);
-            try{
+            try {
                 Thread.sleep(50);
-            }catch(Exception e){
-                
+            } catch (Exception e) {
+
             }
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void inscriptionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inscriptionbuttonActionPerformed
-        // TODO add your handling code here:
+        if (pseudo.getText().isEmpty() || mdp.getText().isEmpty() || pseudo1.getText().isEmpty() || jTextField1.getText().isEmpty() || mdp3.getText().isEmpty() || !course.isSelected() || !natation.isSelected() || !halterophilie.isSelected() || !cyclisme.isSelected() || !tennis.isSelected() || !plancheavoile.isSelected()) {
+            JOptionPane.showMessageDialog(this, "Erreur : Champ Obligatoire","",JOptionPane.ERROR_MESSAGE);
+        }else{
+            
+        }
     }//GEN-LAST:event_inscriptionbuttonActionPerformed
 
     private void mdpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdpActionPerformed
@@ -272,14 +344,6 @@ public class Inscription extends javax.swing.JFrame {
     private void pseudo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pseudo1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_pseudo1ActionPerformed
-
-    private void mdp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdp1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mdp1ActionPerformed
-
-    private void mdp2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdp2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mdp2ActionPerformed
 
     private void cyclismeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyclismeActionPerformed
         // TODO add your handling code here:
@@ -305,6 +369,14 @@ public class Inscription extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_halterophilieActionPerformed
 
+    private void mdp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdp3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mdp3ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -354,16 +426,16 @@ public class Inscription extends javax.swing.JFrame {
     private javax.swing.JLabel inscription;
     private javax.swing.JButton inscriptionbutton;
     private javax.swing.JLabel inscritText;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel logo;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JPasswordField mdp;
-    private javax.swing.JPasswordField mdp1;
-    private javax.swing.JPasswordField mdp2;
+    private javax.swing.JPasswordField mdp3;
     private javax.swing.JCheckBox natation;
     private javax.swing.JCheckBox plancheavoile;
     private javax.swing.JTextField pseudo;

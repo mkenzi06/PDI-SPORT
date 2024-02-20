@@ -58,4 +58,10 @@ public class CourseAPied extends Sport {
     public void setNombreSeancesEntrainement(int nombreSeancesEntrainement) {
         this.nombreSeancesEntrainement = nombreSeancesEntrainement;
     }
+    
+    @Override
+    
+       public String getNom() {
+        return "Course a pied";
+    }
 }

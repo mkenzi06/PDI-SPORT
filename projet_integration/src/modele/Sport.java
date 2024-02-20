@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 //@MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Sport {
+public abstract class Sport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,9 +36,7 @@ public class Sport {
     /**
      * @return the nom
      */
-    public String getNom() {
-        return nom;
-    }
+    public abstract String getNom();
 
     /**
      * @param nom the nom to set

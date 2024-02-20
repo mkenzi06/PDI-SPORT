@@ -25,6 +25,7 @@ public class DBConnection {
                         config.addAnnotatedClass(Halterophilie.class);
                         config.addAnnotatedClass(Cyclisme.class);
                         config.addAnnotatedClass(CourseAPied.class);
+                        config.addAnnotatedClass(DemandeAmi.class);
                         
 //		
 			String packageName = DBConnection.class.getPackage().getName();
