@@ -37,12 +37,12 @@ public class User {
     }
 
     //constructeur prevu pour l'inscription (normalement)
-    public User(String nom, String prenom, String pseudo, String password, Date dateNaissance) {
+    public User(String nom, String prenom, String pseudo, String password) {
         this.nom = nom;
         this.prenom = prenom;
         this.pseudo = pseudo;
         this.password = password;
-        this.dateNaissance = dateNaissance;
+        
         this.sportsPratiques = sportsPratiques;
     }
 

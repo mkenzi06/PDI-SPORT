@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Vues;
+package vues;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +34,7 @@ public class SplashScreen extends javax.swing.JFrame {
                     }
                 }
 //                JOptionPane.showMessageDialog(null, "Bienvenue ici chez PerforMates");
-                  vue.Connexion x = new vue.Connexion();
+                  Connexion x = new Connexion();
                   x.setVisible(true);
                   setVisible(false);
                   

@@ -5,15 +5,32 @@
  */
 package vues;
 
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import modele.Cyclisme;
+import modele.DBConnection;
+import modele.Sport;
+import modele.User;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import java.security.*;
+import modele.CourseAPied;
+import modele.Halterophilie;
+import modele.Natation;
+import modele.Tennis;
+import modele.WindSurf;
+import org.jfree.chart.needle.WindNeedle;
 
 /**
  *
  * @author Sabine
  */
 public class Inscription extends javax.swing.JFrame {
+
+    private int nombreCasesCochees = 0;
 
     /**
      * Creates new form login
@@ -25,33 +42,32 @@ public class Inscription extends javax.swing.JFrame {
                 gestionNombreCasesCochées();
             }
 
-
         });
-        
+
         course.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gestionNombreCasesCochées();
             }
         });
-        
+
         tennis.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gestionNombreCasesCochées();
             }
         });
-        
+
         natation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gestionNombreCasesCochées();
             }
         });
-        
+
         plancheavoile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gestionNombreCasesCochées();
             }
         });
-        
+
         halterophilie.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gestionNombreCasesCochées();
@@ -59,14 +75,36 @@ public class Inscription extends javax.swing.JFrame {
         });
 
     }
+
+    public static String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void gestionNombreCasesCochées() {
-        int nombreCasesActuelles = (cyclisme.isSelected() ? 1 : 0) +
-                                    (course.isSelected() ? 1 : 0) +
-                                    (tennis.isSelected() ? 1 : 0) +
-                                    (natation.isSelected() ? 1 : 0) +
-                                    (plancheavoile.isSelected() ? 1 : 0) +
-                                    (halterophilie.isSelected() ? 1 : 0);
-        
+        int nombreCasesActuelles = (cyclisme.isSelected() ? 1 : 0)
+                + (course.isSelected() ? 1 : 0)
+                + (tennis.isSelected() ? 1 : 0)
+                + (natation.isSelected() ? 1 : 0)
+                + (plancheavoile.isSelected() ? 1 : 0)
+                + (halterophilie.isSelected() ? 1 : 0);
+
         if (nombreCasesActuelles > 3) {
             JOptionPane.showMessageDialog(this, "Vous ne pouvez sélectionner que trois sports au maximum.", "Erreur", JOptionPane.ERROR_MESSAGE);
             // Annuler la sélection de la dernière case cochée
@@ -85,7 +123,7 @@ public class Inscription extends javax.swing.JFrame {
             }
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -184,7 +222,15 @@ public class Inscription extends javax.swing.JFrame {
         inscription.setForeground(new java.awt.Color(255, 255, 255));
         inscription.setText("Se connecter");
         inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, 122, -1));
+        inscription.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inscriptionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                inscriptionMouseEntered(evt);
+            }
+        });
+        formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 400, 80, -1));
 
         inscritText.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         inscritText.setForeground(new java.awt.Color(199, 226, 255));
@@ -204,6 +250,11 @@ public class Inscription extends javax.swing.JFrame {
                 pseudoActionPerformed(evt);
             }
         });
+        pseudo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                pseudoFocusLost(evt);
+            }
+        });
         formSection.add(pseudo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 160, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -214,6 +265,11 @@ public class Inscription extends javax.swing.JFrame {
         pseudo1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pseudo1ActionPerformed(evt);
+            }
+        });
+        pseudo1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                pseudo1FocusLost(evt);
             }
         });
         formSection.add(pseudo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 160, 30));
@@ -293,11 +349,21 @@ public class Inscription extends javax.swing.JFrame {
                 mdp3ActionPerformed(evt);
             }
         });
+        mdp3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                mdp3FocusLost(evt);
+            }
+        });
         formSection.add(mdp3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 340, 30));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
+            }
+        });
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField1FocusLost(evt);
             }
         });
         formSection.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 116, 340, 30));
@@ -326,10 +392,87 @@ public class Inscription extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void inscriptionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inscriptionbuttonActionPerformed
-        if (pseudo.getText().isEmpty() || mdp.getText().isEmpty() || pseudo1.getText().isEmpty() || jTextField1.getText().isEmpty() || mdp3.getText().isEmpty() || !course.isSelected() || !natation.isSelected() || !halterophilie.isSelected() || !cyclisme.isSelected() || !tennis.isSelected() || !plancheavoile.isSelected()) {
-            JOptionPane.showMessageDialog(this, "Erreur : Champ Obligatoire","",JOptionPane.ERROR_MESSAGE);
-        }else{
-            
+        if (pseudo.getText().isEmpty() || mdp.getText().isEmpty() || pseudo1.getText().isEmpty() || jTextField1.getText().isEmpty() || mdp3.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Erreur : Champ Obligatoire", "", JOptionPane.ERROR_MESSAGE);
+        } else if (!mdp3.getText().trim().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$")) {
+            JOptionPane.showMessageDialog(this, "Erreur : Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et être d'au moins 8 caractères.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return; // Arrêter le processus d'inscription si la validation échoue
+        } else if (!pseudo.getText().trim().matches("^[a-zA-Z]+$")) {
+            JOptionPane.showMessageDialog(this, "Erreur : seulement des lettres pour votre nom ", "Erreur", JOptionPane.ERROR_MESSAGE);
+            pseudo.setText("");
+        } else if (!jTextField1.getText().trim().matches("^[a-zA-Z0-9-_]{4,20}$")) {
+            JOptionPane.showMessageDialog(this, "Erreur : Le pseudo ne doit contenir que des lettres, chiffres, et doit etre sup a 4", "Erreur", JOptionPane.ERROR_MESSAGE);
+            jTextField1.setText("");
+        } else if (!pseudo1.getText().trim().matches("^[a-zA-Z]+$")) {
+            JOptionPane.showMessageDialog(this, "Erreur : seulement des lettres pour votre prenom ", "Erreur", JOptionPane.ERROR_MESSAGE);
+            pseudo1.setText("");
+        } else if (nombreCasesCochees == 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez selectionner au moins un sport.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        } else if (!mdp.getText().trim().equals(mdp3.getText().trim())) {
+            JOptionPane.showMessageDialog(this, "Les mots de passe ne concordent pas.", "Erreur Formulaire", JOptionPane.ERROR_MESSAGE);
+        } else {
+            //insertion dans la BD avec hibernate
+            Session session = DBConnection.getSession();
+            Transaction transaction = session.beginTransaction();
+            String hashedPassword = hashPassword(mdp3.getText().trim());
+
+            if (hashedPassword != null) {
+                long count = (long) session.createQuery("SELECT COUNT(*) FROM User WHERE pseudo = :pseudo")
+                        .setParameter("pseudo", jTextField1.getText().trim())
+                        .uniqueResult();
+
+                if (count > 0) {
+                    JOptionPane.showMessageDialog(this, "Erreur : Ce pseudo est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                User utilisateur = new User(pseudo.getText().trim(), pseudo1.getText().trim(), jTextField1.getText().trim(), hashedPassword);
+
+                // Associer les sports sélectionnés à l'utilisateur
+                if (cyclisme.isSelected()) {
+                    Cyclisme s = new Cyclisme();
+                    s.setDistanceTotaleParcourue(0);
+                    s.setTempsPerformance(0);
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+                if (natation.isSelected()) {
+                    Natation s = new Natation();
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+                if (plancheavoile.isSelected()) {
+                    WindSurf s = new WindSurf();
+
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+                if (tennis.isSelected()) {
+                    Tennis s = new Tennis();
+
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+                if (halterophilie.isSelected()) {
+                    Halterophilie s = new Halterophilie();
+
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+                if (course.isSelected()) {
+                    CourseAPied s = new CourseAPied();
+
+                    session.persist(s);
+                    utilisateur.getSportsPratiques().add(s);
+                }
+
+                // Insérer l'utilisateur dans la base de données
+                session.persist(utilisateur);
+                transaction.commit();
+                JOptionPane.showMessageDialog(this, "Inscription reussie !", "INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors du hachage du mot de passe", "erreur", JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     }//GEN-LAST:event_inscriptionbuttonActionPerformed
 
@@ -342,41 +485,98 @@ public class Inscription extends javax.swing.JFrame {
     }//GEN-LAST:event_pseudoActionPerformed
 
     private void pseudo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pseudo1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_pseudo1ActionPerformed
 
     private void cyclismeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyclismeActionPerformed
-        // TODO add your handling code here:
+        if (cyclisme.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_cyclismeActionPerformed
 
     private void courseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseActionPerformed
-        // TODO add your handling code here:
+        if (course.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_courseActionPerformed
 
     private void tennisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tennisActionPerformed
-        // TODO add your handling code here:
+        if (tennis.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_tennisActionPerformed
 
     private void natationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_natationActionPerformed
-        // TODO add your handling code here:
+        if (natation.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_natationActionPerformed
 
     private void plancheavoileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plancheavoileActionPerformed
-        // TODO add your handling code here:
+        if (plancheavoile.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_plancheavoileActionPerformed
 
     private void halterophilieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_halterophilieActionPerformed
-        // TODO add your handling code here:
+        if (halterophilie.isSelected()) {
+            nombreCasesCochees++;
+        } else {
+            nombreCasesCochees--;
+        }
+        gestionNombreCasesCochées();
     }//GEN-LAST:event_halterophilieActionPerformed
 
     private void mdp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mdp3ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_mdp3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
+
+    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
+
+    }//GEN-LAST:event_jTextField1FocusLost
+
+    private void pseudoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pseudoFocusLost
+
+    }//GEN-LAST:event_pseudoFocusLost
+
+    private void pseudo1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pseudo1FocusLost
+
+    }//GEN-LAST:event_pseudo1FocusLost
+
+    private void mdp3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_mdp3FocusLost
+
+    }//GEN-LAST:event_mdp3FocusLost
+
+    private void inscriptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inscriptionMouseClicked
+        Connexion c = new Connexion();
+        c.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_inscriptionMouseClicked
+
+    private void inscriptionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inscriptionMouseEntered
+        Component component = evt.getComponent();
+        component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_inscriptionMouseEntered
+
     /**
      * @param args the command line arguments
      */

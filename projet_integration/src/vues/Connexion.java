@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vue;
+package vues;
 
+import java.awt.Component;
+import java.awt.Cursor;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import modele.*;
@@ -22,7 +24,7 @@ public class Connexion extends javax.swing.JFrame {
      */
     public Connexion() {
         initComponents();
-        
+
     }
 
     /**
@@ -131,7 +133,15 @@ public class Connexion extends javax.swing.JFrame {
         inscription.setForeground(new java.awt.Color(255, 255, 255));
         inscription.setText("S'inscrire");
         inscription.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 122, -1));
+        inscription.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inscriptionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                inscriptionMouseEntered(evt);
+            }
+        });
+        formSection.add(inscription, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 60, -1));
 
         inscritText.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         inscritText.setForeground(new java.awt.Color(199, 226, 255));
@@ -167,37 +177,39 @@ public class Connexion extends javax.swing.JFrame {
     }//GEN-LAST:event_exitCurseurMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        for (double i = 0.0; i <=1.0; i = i+0.1){
-            String val = i+ "";
+        for (double i = 0.0; i <= 1.0; i = i + 0.1) {
+            String val = i + "";
             float f = Float.valueOf(val);
             this.setOpacity(f);
-            try{
+            try {
                 Thread.sleep(50);
-            }catch(Exception e){
-                
+            } catch (Exception e) {
+
             }
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void connexionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionbuttonActionPerformed
-        if(pseudo.getText().isEmpty()|| mdp.getText().isEmpty()){
+        if (pseudo.getText().isEmpty() || mdp.getText().isEmpty()) {
 //            JOptionPane.showMessageDialog(this, "CHAMP OBLIGATOIRE");
             JOptionPane.showMessageDialog(this, "champ obligatioire", "ERREUR", JOptionPane.ERROR_MESSAGE);
-        }else{
+        } else {
             Session s = DBConnection.getSession();
             Transaction transaction = s.beginTransaction();
             User userExist = UserDataConnect.getUserByUsernameAndPassword(pseudo.getText(), mdp.getText());
-            if(userExist!=null){
-                JOptionPane.showMessageDialog(this, "Bienvenue\n"+userExist.getPrenom());
+            if (userExist != null) {
+                JOptionPane.showMessageDialog(this, "Bienvenue\n" + userExist.getPrenom());
                 Profil p = new Profil(userExist);
                 p.setVisible(true);
-                
+
                 setVisible(false);
-                      
-            }else {
+
+            } else {
                 JOptionPane.showMessageDialog(this, "Pseudo ou mot de passe inexistant !", "ERREUR", JOptionPane.ERROR_MESSAGE);
+                pseudo.setText("");
+                mdp.setText("");
             }
-            
+
         }
     }//GEN-LAST:event_connexionbuttonActionPerformed
 
@@ -208,6 +220,18 @@ public class Connexion extends javax.swing.JFrame {
     private void pseudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pseudoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_pseudoActionPerformed
+
+    private void inscriptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inscriptionMouseClicked
+        Inscription i = new Inscription();
+        i.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_inscriptionMouseClicked
+
+    private void inscriptionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inscriptionMouseEntered
+        Component component = evt.getComponent();
+
+        component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_inscriptionMouseEntered
 
     /**
      * @param args the command line arguments

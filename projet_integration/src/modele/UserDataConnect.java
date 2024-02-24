@@ -12,6 +12,7 @@ import modele.DBConnection;
 import org.hibernate.Query;
 import java.util.*;
 import org.hibernate.cfg.annotations.Version;
+import static vues.Inscription.hashPassword;
 //import org.hibernate.query.Query;
 
 /**
@@ -27,9 +28,11 @@ public class UserDataConnect {
 
         Session session = DBConnection.getSession();
         Transaction read = session.beginTransaction();
+        String hashedPassword = hashPassword(password);
+
         Query readq = session.createQuery("from User where pseudo = :username and password = :password");
         readq.setParameter("username", username);
-        readq.setParameter("password", password);
+        readq.setParameter("password", hashedPassword);
         List res = readq.list();
         User u1;
 

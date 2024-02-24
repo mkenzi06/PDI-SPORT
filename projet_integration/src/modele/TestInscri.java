@@ -20,7 +20,7 @@ public class TestInscri {
     public static void main(String[] args) {
         Session session = DBConnection.getSession();
         Transaction persistTransaction = session.beginTransaction();
-        User utilisateur = new User("Nom1", "Prenom2", "Pseudo", "MotDePasse", new Date());
+        User utilisateur = new User("Nom1", "Prenom2", "Pseudo", "MotDePasse");
         Cyclisme cyclisme = new Cyclisme();
         cyclisme.setDistanceTotaleParcourue(100.0);
         cyclisme.setTempsPerformance(10.5);
