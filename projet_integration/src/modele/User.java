@@ -27,6 +27,9 @@ public class User {
     private String prenom;
     private String pseudo;
     private String password;
+    @Lob
+    private byte[] photoProfil;
+
 
     @Temporal(TemporalType.DATE)
     private Date dateNaissance;
@@ -102,6 +105,18 @@ public class User {
      */
     public Long getId() {
         return id;
+    }
+    /**
+     * @return the photoProfil
+     */
+    public byte[] getPhotoProfil() {
+        return photoProfil;
+    }
+       /**
+     * @param photoProfil the photoProfil to set
+     */
+    public void setPhotoProfil(byte[] photoProfil) {
+        this.photoProfil = photoProfil;
     }
 
     /**

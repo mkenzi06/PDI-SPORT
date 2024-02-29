@@ -38,9 +38,11 @@ public class UserDataConnect {
 
         if (!res.isEmpty()) {
             u1 = (User) res.get(0);
+            read.commit();
+            session.close();
             return u1;
         }
-
+        
         return null;
     }
 

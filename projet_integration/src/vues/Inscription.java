@@ -411,6 +411,10 @@ public class Inscription extends javax.swing.JFrame {
         } else if (!mdp.getText().trim().equals(mdp3.getText().trim())) {
             JOptionPane.showMessageDialog(this, "Les mots de passe ne concordent pas.", "Erreur Formulaire", JOptionPane.ERROR_MESSAGE);
         } else {
+            if (!cyclisme.isSelected() && !course.isSelected() && !tennis.isSelected() && !natation.isSelected() && !plancheavoile.isSelected() && !halterophilie.isSelected()) {
+                JOptionPane.showMessageDialog(this, "Veuillez sélectionner au moins un sport.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return; // Empêcher l'insertion dans la base de données si aucun sport n'est sélectionné
+            }
             //insertion dans la BD avec hibernate
             Session session = DBConnection.getSession();
             Transaction transaction = session.beginTransaction();

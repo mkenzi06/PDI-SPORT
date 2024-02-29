@@ -18,7 +18,7 @@ public class TestRetrieve {
 
         try {
             // Retrieve a specific User by ID (replace 1L with the actual user ID)
-            User utilisateur = (User) session.get(User.class, 18L);
+            User utilisateur = (User) session.get(User.class, 5L);
 
             // Check if the user exists
             if (utilisateur != null) {
@@ -40,12 +40,15 @@ public class TestRetrieve {
                 for (Sport sport : sportsPratiques) {
                     if (sport instanceof Cyclisme) {
                         Cyclisme cyclisme = (Cyclisme) sport;
-                        System.out.println("Cyclisme - Distance: " + cyclisme.getDistanceTotaleParcourue() +
-                                ", Temps de Performance: " + cyclisme.getTempsPerformance());
+                        System.out.println("modele.TestRetrieve.main()");
+//                        System.out.println("Cyclisme - Distance: " + cyclisme.getDistanceTotaleParcourue() +
+//                                ", Temps de Performance: " + cyclisme.getTempsPerformance());
                     } if(sport instanceof CourseAPied) {
                         CourseAPied cap = (CourseAPied) sport;
-                        System.out.println("Course a pied - Distance: " + cap.getDistanceParcourue() +
-                                ", Temps de Performance: " + cap.getTempsPerformance()+"nbr de seances : "+cap.getNombreSeancesEntrainement());
+                        System.out.println("modele.TestRetrieve.main()");
+                        
+//                        System.out.println("Course a pied - Distance: " + cap.getDistanceParcourue() +
+//                                ", Temps de Performance: " + cap.getTempsPerformance()+"nbr de seances : "+cap.getNombreSeancesEntrainement());
                         
                     }
                 }

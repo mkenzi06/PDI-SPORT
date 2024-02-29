@@ -45,7 +45,6 @@ public class Connexion extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         pseudoIcon = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        mdpOublie = new javax.swing.JLabel();
         connexionbutton = new javax.swing.JButton();
         inscription = new javax.swing.JLabel();
         inscritText = new javax.swing.JLabel();
@@ -110,13 +109,6 @@ public class Connexion extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(199, 226, 255));
         jLabel8.setText("Mot de passe");
         formSection.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 341, -1));
-
-        mdpOublie.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        mdpOublie.setForeground(new java.awt.Color(199, 226, 255));
-        mdpOublie.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        mdpOublie.setText("Mot de passe oublié ?");
-        mdpOublie.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        formSection.add(mdpOublie, new org.netbeans.lib.awtextra.AbsoluteConstraints(254, 261, 121, 27));
 
         connexionbutton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         connexionbutton.setForeground(new java.awt.Color(25, 149, 173));
@@ -198,10 +190,10 @@ public class Connexion extends javax.swing.JFrame {
             Transaction transaction = s.beginTransaction();
             User userExist = UserDataConnect.getUserByUsernameAndPassword(pseudo.getText(), mdp.getText());
             if (userExist != null) {
+//                userExist.getSportsPratiques().size();
                 JOptionPane.showMessageDialog(this, "Bienvenue\n" + userExist.getPrenom());
                 Profil p = new Profil(userExist);
                 p.setVisible(true);
-
                 setVisible(false);
 
             } else {
@@ -209,7 +201,8 @@ public class Connexion extends javax.swing.JFrame {
                 pseudo.setText("");
                 mdp.setText("");
             }
-
+            transaction.commit();
+            s.close();
         }
     }//GEN-LAST:event_connexionbuttonActionPerformed
 
@@ -284,7 +277,6 @@ public class Connexion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField mdp;
     private javax.swing.JLabel mdpIcon;
-    private javax.swing.JLabel mdpOublie;
     private javax.swing.JTextField pseudo;
     private javax.swing.JLabel pseudoIcon;
     // End of variables declaration//GEN-END:variables
