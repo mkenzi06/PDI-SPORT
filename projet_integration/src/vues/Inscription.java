@@ -472,7 +472,11 @@ public class Inscription extends javax.swing.JFrame {
                 // Insérer l'utilisateur dans la base de données
                 session.persist(utilisateur);
                 transaction.commit();
-                JOptionPane.showMessageDialog(this, "Inscription reussie !", "INSCRIPTION", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Inscription reussie !", "INSCRIPTION", JOptionPane.INFORMATION_MESSAGE);
+                Connexion c = new Connexion();
+                c.setVisible(true);
+                this.setVisible(false);
+                
             } else {
                 JOptionPane.showMessageDialog(this, "Erreur lors du hachage du mot de passe", "erreur", JOptionPane.ERROR_MESSAGE);
             }

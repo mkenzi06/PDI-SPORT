@@ -15,11 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import modele.*;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -30,11 +32,11 @@ import org.hibernate.Transaction;
 public class Profil extends javax.swing.JFrame {
 
     private User u;
+    DefaultListModel<String> demandesModel = new DefaultListModel<>();
+    DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
 
-    /**
-     * Creates new form Profil
-     */
     public Profil(User user) {
+        setUndecorated(true);
         initComponents();
         setLocationRelativeTo(this);
         this.u = user;
@@ -48,7 +50,7 @@ public class Profil extends javax.swing.JFrame {
 
     private void afficherDonneesUtilisateur() {
         // Exemple d'utilisation des données de l'utilisateur
-        nomprenom.setText(u.getPrenom() + "\t   " + u.getNom());
+        nomprenom.setText(u.getPrenom() + "\t " + u.getNom());
         if (u.getPhotoProfil() != null && u.getPhotoProfil().length > 0) {
             // Si l'utilisateur a une photo, afficher cette photo
             ImageIcon img = new ImageIcon(u.getPhotoProfil());
@@ -70,9 +72,9 @@ public class Profil extends javax.swing.JFrame {
 //        sportPhotos.put("Cyclisme", "/icon/cyclisme.jpg");
         sportPhotos.put("Course a pied", "/icon/running.png");
         sportPhotos.put("Natation", "/icon/swimming.png");
-        sportPhotos.put("tennis", "/icon/tennis.png");
+        sportPhotos.put("Tennis", "/icon/tennis.png");
         sportPhotos.put("Haltérophilie", "/icon/weightlifter.png");
-        sportPhotos.put("windsurf", "/icon/windsurfing.png");
+        sportPhotos.put("Windsurf", "/icon/windsurfing.png");
         sportPhotos.put("Cyclisme", "/icon/cycling.png");
         int i = 0;
 //        sportbutton1.hide();
@@ -124,47 +126,71 @@ public class Profil extends javax.swing.JFrame {
         } else if (i == 2) {
             sportbutton3.setVisible(false);
         }
-
-//        Session session = DBConnection.getSession();
-//        Transaction transaction = session.beginTransaction();
-//        User utilisateur = (User) session.get(User.class, u.getId());
-//        List<Sport> sportsPratiques = u.getSportsPratiques();
-//        int counter = 0;
-//        for (Sport sport : sportsPratiques) {
-//            if (sport instanceof Cyclisme) {
-////                        Cyclisme cyclisme = (Cyclisme) sport;
-//                sportbutton1.setText("Cyclisme");
-//                counter++;
-//            }
-//            if (sport instanceof CourseAPied) {
-//                sportbutton2.setText("Course a pied");
-//                counter++;
+        initListeAmi();
+//        List<DemandeAmi> demandesRecues = utilisateur.getDemandesRecues();
+//        DefaultListModel<String> demandesModel = new DefaultListModel<>();
+//        DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
 //
-//            }
-//            if (sport instanceof Tennis) {
-////                        Cyclisme cyclisme = (Cyclisme) sport;
-//                sportbutton3.setText("Tennis");
-//                counter++;
-//            }
-//            if (sport instanceof Natation) {
-////                        Cyclisme cyclisme = (Cyclisme) sport;
-//                sportbutton1.setText("Natation");
-//                counter++;
-//            }
-//            if (sport instanceof Halterophilie) {
-////                        Cyclisme cyclisme = (Cyclisme) sport;
-//                sportbutton2.setText("Halterophilie");
-//                counter++;
-//            }
-//            if (sport instanceof WindSurf) {
-////                        Cyclisme cyclisme = (Cyclisme) sport;
-//                sportbutton3.setText("Planche a voile");
-//            }
-//            
+//        // Parcourir la liste des demandes reçues et les ajouter au modèle de liste
+//        for (DemandeAmi demande : demandesRecues) {
+//            User demandeur = demande.getDemandeur();
+//            String statut = demande.getStatut().toString();
+//            if (statut.equals("EN_ATTENTE")) {
+//                demandesEnAttenteModel.addElement(demandeur.getPseudo());
+//            } else if (statut.equals("ACCEPTEE")) {
+//                demandesModel.addElement(demandeur.getPseudo());
+//            }// Supposons que vous avez une méthode getPseudo() dans la classe User
 //        }
-//        session.close();
-        // Afficher d'autres données de l'utilisateur selon vos besoins
+//        listamis.setModel(demandesModel);
+//        demandeamis.setModel(demandesEnAttenteModel);
     }
+
+   public void initListeAmi() {
+    Session session = DBConnection.getSession();
+    Transaction transaction = session.beginTransaction();
+    User utilisateur = (User) session.get(User.class, u.getId());
+    List<DemandeAmi> demandesRecues = utilisateur.getDemandesRecues();
+    List<DemandeAmi> demandesEnvoy = utilisateur.getDemandesEnvoyees();
+    DefaultListModel<String> demandesModel = new DefaultListModel<>();
+    DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
+
+    // Vérifier si la liste des demandes reçues est vide
+    if (demandesRecues != null && !demandesRecues.isEmpty()) {
+        // Parcourir la liste des demandes reçues et les ajouter au modèle de liste
+        for (DemandeAmi demande : demandesRecues) {
+            User demandeur = demande.getDemandeur();
+            String statut = demande.getStatut().toString();
+            if (statut.equals("EN_ATTENTE")) {
+                demandesEnAttenteModel.addElement(demandeur.getPseudo());
+            } else if (statut.equals("ACCEPTEE")) {
+                demandesModel.addElement(demandeur.getPseudo());
+                if (!demandesModel.contains(demandeur.getPseudo())) {
+                    demandesModel.addElement(demandeur.getPseudo());
+                }
+            }
+        }
+    }
+    if (demandesEnvoy != null && !demandesEnvoy.isEmpty()) {
+        // Parcourir la liste des demandes envoyées et les ajouter au modèle de liste
+        for (DemandeAmi demande : demandesEnvoy) {
+            User destinataire = demande.getDestinataire();
+            String statut = demande.getStatut().toString();
+            if (statut.equals("EN_ATTENTE") && destinataire.equals(utilisateur)) {
+                if (!demandesEnAttenteModel.contains(destinataire.getPseudo())) {
+                    demandesEnAttenteModel.addElement(destinataire.getPseudo());
+                }
+            } else if (statut.equals("ACCEPTEE")) {
+                if (!demandesModel.contains(destinataire.getPseudo())) {
+                    demandesModel.addElement(destinataire.getPseudo());
+                }
+            }
+        }
+    }
+
+    listamis.setModel(demandesModel);
+    demandeamis.setModel(demandesEnAttenteModel);
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,7 +203,6 @@ public class Profil extends javax.swing.JFrame {
 
         backblue = new javax.swing.JPanel();
         nomprenom = new javax.swing.JLabel();
-        peroamisbutton = new javax.swing.JButton();
         mesportsbutton = new javax.swing.JButton();
         rechamisbutton = new javax.swing.JButton();
         exitCurseur = new javax.swing.JLabel();
@@ -208,15 +233,9 @@ public class Profil extends javax.swing.JFrame {
         nomprenom.setText("Nom Prenom");
         backblue.add(nomprenom, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
-        peroamisbutton.setText("Performances amis");
-        peroamisbutton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                peroamisbuttonActionPerformed(evt);
-            }
-        });
-        backblue.add(peroamisbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 70, 248, 54));
-
+        mesportsbutton.setBackground(new java.awt.Color(255, 255, 255));
         mesportsbutton.setText("Mes sports");
+        mesportsbutton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         mesportsbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mesportsbuttonActionPerformed(evt);
@@ -224,7 +243,9 @@ public class Profil extends javax.swing.JFrame {
         });
         backblue.add(mesportsbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 70, 248, 54));
 
+        rechamisbutton.setBackground(new java.awt.Color(255, 255, 255));
         rechamisbutton.setText("Recherche amis");
+        rechamisbutton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         rechamisbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rechamisbuttonActionPerformed(evt);
@@ -248,7 +269,7 @@ public class Profil extends javax.swing.JFrame {
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lphoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/user (1).png"))); // NOI18N
-        jPanel3.add(lphoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 130, -1));
+        jPanel3.add(lphoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, -10, 130, 150));
 
         backblue.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 170, 130));
 
@@ -288,6 +309,12 @@ public class Profil extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listamis.setEnabled(false);
+        listamis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listamisMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(listamis);
 
         backgris1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 230, 240));
@@ -296,6 +323,16 @@ public class Profil extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
+        });
+        demandeamis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                demandeamisMouseClicked(evt);
+            }
+        });
+        demandeamis.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                demandeamisValueChanged(evt);
+            }
         });
         jScrollPane3.setViewportView(demandeamis);
 
@@ -311,6 +348,11 @@ public class Profil extends javax.swing.JFrame {
         sportbutton3.setForeground(new java.awt.Color(17, 149, 173));
         sportbutton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
         sportbutton3.setText("Nom Sport");
+        sportbutton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sportbutton3ActionPerformed(evt);
+            }
+        });
         getContentPane().add(sportbutton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 500, 380, 280));
 
         sportbutton1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
@@ -328,21 +370,23 @@ public class Profil extends javax.swing.JFrame {
         sportbutton2.setForeground(new java.awt.Color(25, 149, 173));
         sportbutton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
         sportbutton2.setText("Nom Sport");
+        sportbutton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sportbutton2ActionPerformed(evt);
+            }
+        });
         getContentPane().add(sportbutton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 200, 380, 280));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void peroamisbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peroamisbuttonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_peroamisbuttonActionPerformed
 
     private void mesportsbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mesportsbuttonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_mesportsbuttonActionPerformed
 
     private void rechamisbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechamisbuttonActionPerformed
-        // TODO add your handling code here:
+        AjoutAmi a = new AjoutAmi(this.u);
+        a.setVisible(true);
     }//GEN-LAST:event_rechamisbuttonActionPerformed
 
     private void exitCurseurMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exitCurseurMouseClicked
@@ -397,6 +441,7 @@ public class Profil extends javax.swing.JFrame {
 
                 // Affichez un message de succès
                 JOptionPane.showMessageDialog(this, "Photo de profil mise à jour avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                tpath.setText("");
             } catch (IOException ex) {
                 Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -406,8 +451,153 @@ public class Profil extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void sportbutton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sportbutton1ActionPerformed
-        // TODO add your handling code here:
+        String buttonText = sportbutton1.getText();
+
+        // Ouvrez l'interface correspondante en fonction du texte du bouton
+        openSportInterface(buttonText);
     }//GEN-LAST:event_sportbutton1ActionPerformed
+
+    private void demandeamisValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_demandeamisValueChanged
+
+    }//GEN-LAST:event_demandeamisValueChanged
+
+    private void sportbutton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sportbutton2ActionPerformed
+        String buttonText = sportbutton2.getText();
+
+        // Ouvrez l'interface correspondante en fonction du texte du bouton
+        openSportInterface(buttonText);
+    }//GEN-LAST:event_sportbutton2ActionPerformed
+
+    private void sportbutton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sportbutton3ActionPerformed
+        String buttonText = sportbutton3.getText();
+
+        // Ouvrez l'interface correspondante en fonction du texte du bouton
+        openSportInterface(buttonText);
+    }//GEN-LAST:event_sportbutton3ActionPerformed
+
+    private void listamisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listamisMouseClicked
+
+    }//GEN-LAST:event_listamisMouseClicked
+
+    private void demandeamisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_demandeamisMouseClicked
+        if (evt.getClickCount() == 1) { // Vérifie si l'utilisateur a cliqué une fois
+            int[] indicesSelectionnes = demandeamis.getSelectedIndices();
+            for (int indice : indicesSelectionnes) {
+                String pseudoSelectionne = demandeamis.getModel().getElementAt(indice);
+                int choix = JOptionPane.showConfirmDialog(null, "Voulez-vous accepter la demande d'ami de " + pseudoSelectionne + " ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (choix == JOptionPane.YES_OPTION) {
+
+                    Session s = DBConnection.getSession();
+                    Transaction t = s.beginTransaction();
+                    User d2 = User.getUserByPseudo(pseudoSelectionne);
+                    User d = (User) s.get(User.class, u.getId());
+                    Query query = s.createQuery("FROM DemandeAmi WHERE demandeur = :demandeur AND destinataire = :destinataire");
+                    query.setParameter("demandeur", d2);
+                    query.setParameter("destinataire", d);
+                    DemandeAmi demandeAmi = (DemandeAmi) query.uniqueResult();
+                    if (demandeAmi != null) {
+                        // Mettre à jour le statut de la demande d'ami
+                        demandeAmi.setStatut(StatutDemandeAmi.StatutDemandeAm.ACCEPTEE);
+
+                        // Enregistrer les modifications dans la base de données
+                        s.update(demandeAmi);
+
+                        t.commit();
+                        s.close();
+                        JOptionPane.showMessageDialog(this, "Demande d'ami acceptee de " + pseudoSelectionne, "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+                        initListeAmi();
+                        // Traitement si l'utilisateur a accepté la demande d'ami
+//                    System.out.println("Demande d'ami acceptée pour " + pseudoSelectionne);
+                    }
+
+                    // Traitement si l'utilisateur a accepté la demande d'ami
+//                    System.out.println("Demande d'ami acceptée pour " + pseudoSelectionne);
+                } else {
+                    // Traitement si l'utilisateur a refusé la demande d'amiSession s = DBConnection.getSession();
+                    Session s = DBConnection.getSession();
+//                    Transaction t = s.beginTransaction();
+                    Transaction t = s.beginTransaction();
+                    User d2 = User.getUserByPseudo(pseudoSelectionne);
+                    User d = (User) s.get(User.class, u.getId());
+                    Query query = s.createQuery("FROM DemandeAmi WHERE demandeur = :demandeur AND destinataire = :destinataire");
+                    query.setParameter("demandeur", d2);
+                    query.setParameter("destinataire", d);
+                    DemandeAmi demandeAmi = (DemandeAmi) query.uniqueResult();
+                    if (demandeAmi != null) {
+                        // Mettre à jour le statut de la demande d'ami
+                        demandeAmi.setStatut(StatutDemandeAmi.StatutDemandeAm.REFUSEE);
+//                        s.delete(demandeAmi);
+
+                        // Enregistrer les modifications dans la base de données
+//                        s.update(demandeAmi);
+                        t.commit();
+                        s.close();
+                        JOptionPane.showMessageDialog(this, "Demande d'ami refusee de " +pseudoSelectionne, "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+//                        System.out.println("Demande d'ami refusée pour " + pseudoSelectionne);
+                        initListeAmi();
+                    }
+                }
+            }
+        }
+
+    }//GEN-LAST:event_demandeamisMouseClicked
+    private void openSportInterface(String sportName) {
+        // Ouvrez l'interface correspondante en fonction du nom du sport
+        switch (sportName) {
+            case "Course a pied":
+                // Ouvrez l'interface pour le sport Course a pied
+                Session sis = DBConnection.getSession();
+                Transaction tttii = sis.beginTransaction();
+                User utilisa = (User) sis.get(User.class, u.getId());
+                RunningInterface courseAPiedInterface = new RunningInterface(utilisa);
+                courseAPiedInterface.setVisible(true);
+                break;
+            case "Natation":
+                // Ouvrez l'interface pour le sport Natation
+                Session siss = DBConnection.getSession();
+                Transaction ttti = siss.beginTransaction();
+                User utilis = (User) siss.get(User.class, u.getId());
+                NatationInterface natationInterface = new NatationInterface(utilis);
+                natationInterface.setVisible(true);
+                break;
+            case "Cyclisme":
+                // Ouvrez l'interface pour le sport Cyclisme
+                Session session = DBConnection.getSession();
+                Transaction transaction = session.beginTransaction();
+                User utilisateur = (User) session.get(User.class, u.getId());
+                CyclismeInterf cyclismeInterf = new CyclismeInterf(utilisateur);
+                cyclismeInterf.setVisible(true);
+                break;
+
+            case "Tennis":
+                TennisInterface t = new TennisInterface();
+                t.setVisible(true);
+                break;
+
+            case "Windsurf":
+
+                Session s = DBConnection.getSession();
+                Transaction ttt = s.beginTransaction();
+                User utili = (User) s.get(User.class, u.getId());
+                WindSurfInterface c = new WindSurfInterface(utili);
+                c.setVisible(true);
+
+                break;
+            case "Haltérophilie":
+                Session si = DBConnection.getSession();
+                Transaction i = si.beginTransaction();
+                User q = (User) si.get(User.class, u.getId());
+                HalterophilieInterface tv = new HalterophilieInterface(q);
+                tv.setVisible(true);
+                break;
+
+            // Ajoutez des cas pour les autres sports si nécessaire
+            default:
+                // Gérez le cas où le sport n'est pas reconnu
+                System.out.println("Sport non reconnu");
+                break;
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -460,7 +650,6 @@ public class Profil extends javax.swing.JFrame {
     private javax.swing.JLabel lphoto;
     private javax.swing.JButton mesportsbutton;
     private javax.swing.JLabel nomprenom;
-    private javax.swing.JButton peroamisbutton;
     private javax.swing.JButton rechamisbutton;
     private javax.swing.JButton sportbutton1;
     private javax.swing.JButton sportbutton2;

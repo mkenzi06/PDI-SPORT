@@ -1,93 +1,80 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modele;
 
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import java.util.*;
 import javax.swing.*;
-/**
- *
- * @author HP
- */
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.criterion.Projections;
+
 public class Test {
 
-    public static boolean checkFriendRequest(User demandeur, User destinataire) {
-        Session session = DBConnection.getSession();
-        try {
-            Criteria criteria = session.createCriteria(DemandeAmi.class);
-            criteria.add(Restrictions.eq("demandeur", demandeur));
-            criteria.add(Restrictions.eq("destinataire", destinataire));
-            criteria.add(Restrictions.eq("statut", StatutDemandeAmi.StatutDemandeAm.EN_ATTENTE));
-
-            return criteria.list().isEmpty();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-    }
-
     public static void main(String[] args) {
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        String username = "wassim123";
-        String password = "A123456*";
-        User userExists = UserDataConnect.getUserByUsernameAndPassword(username, password);
-        try {
-            if (userExists != null) {
+        Session s = DBConnection.getSession();
+        Transaction t = s.beginTransaction();
+        User u1 = (User) s.get(User.class, 1L);
+        List<DemandeAmi> d = u1.getDemandesEnvoyees();
+        
+        String hql = "SELECT d.demandeur.id FROM DemandeAmi d WHERE d.destinataire = :user AND d.statut = :statut";
+        Query query = s.createQuery(hql);
+        query.setParameter("user", u1);
+        query.setParameter("statut", StatutDemandeAmi.StatutDemandeAm.EN_ATTENTE);
 
-                System.out.println("Bienvenue\n" + userExists.getNom());
-//           User newUser = new User("Nom1", "Prenom2", "Pseudo", "password", new Date());
-                User utilisateur = (User) session.get(User.class, 2L);
-                System.out.println("modele.Test.main()" + utilisateur.getId());
-//            userExists.envoyerDemandeAmi(utilisateur);
-//            userExists.getAmis().add(utilisateur);
-                try {
-                    if (checkFriendRequest(userExists, utilisateur)) {
-                        DemandeAmi e = new DemandeAmi();
-                        e.setDemandeur(userExists);
-                        e.setDestinataire(utilisateur);
-                        e.setStatut(StatutDemandeAmi.StatutDemandeAm.EN_ATTENTE);
-                        
-                        session.persist(e);
-                        JOptionPane.showMessageDialog(null, "demande envoye avec succees");
-                        transaction.commit();
-                        session.close();
-                    } else {
-                        System.out.println("Une demande d'ami similaire existe déjà.");
-
-                    }
-                }catch(Exception e){
-                    if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-                    
-                }
-                
-
-                }else {
-                System.out.println("IDENTIFIANT(S) INCORRECT ! ");
-
-            }
-            }catch (Exception e) {
-
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
+        List<Long> userIds = query.list();
+        for (Long userId : userIds) {
+            System.out.println("User ID: " + userId);
         }
-        }
+//        String sportName = "Tennis";
+//        Criteria criteria = s.createCriteria(User.class)
+//                .createAlias("sportsPratiques", "s")
+//                .add(Restrictions.eq("s.class", Cyclisme.class));
+//        Criteria criteria = s.createCriteria(DemandeAmi.class)
+//                .createAlias("destinataire", "d") // Créer une jointure avec la classe User et l'alias "d" pour accéder au destinataire
+//                .add(Restrictions.eq("d", u1)) // Ajouter une restriction pour que le destinataire soit égal à l'utilisateur u1
+//                .add(Restrictions.eq("statut", StatutDemandeAmi.StatutDemandeAm.ACCEPTEE));  // Accéder à l'ID du destinataire via l'alias "d"
+//        List<DemandeAmi> users = criteria.list();
+//        for (DemandeAmi user : users) {
+//            System.out.println("Nom: " + user.getDemandeur());
+//            System.out.println("Prénom: " + user.getDestinataire());
+//            // Ajoutez d'autres informations de l'utilisateur que vous souhaitez afficher
+//        }
+
+//        String hql = "SELECT u FROM User u JOIN u.sportsPratiques s WHERE s.class = :sportClassName";
+//
+//        Query query = s.createQuery(hql);
+//        query.setParameter("sportClassName", Cyclisme.class.getName());
+//        List<User> users = query.list();
+//        String hql = "SELECT u FROM User u JOIN u.sportsPratiques s WHERE TYPE(s) = Cyclisme";
+//
+//        Query query = s.createQuery(hql);
+//        List<User> users = query.getResultList();
+//
+//        User u3 = (User) usersPratiquantCyclisme.get(0);
+//        System.out.println("miaou" + users.size());
+//       Cyclisme c = new Cyclisme();
+//       c.setDistanceTotaleParcourue(1200);
+//       s.persist(c);
+//       
+//       List<Sport> sportsPratiques = u1.getSportsPratiques();
+//       sportsPratiques.add(c);
+//        for (int i = 0; i < 3; i++) {
+//       Performances p = new Performances();
+//       p.setUser(u1);
+//       p.setSport(c);
+//       // Créer une date différente pour chaque performance
+//       Date datePerformance = new Date(System.currentTimeMillis() + i * 24 * 60 * 60 * 1000); // Ajoute un jour à chaque itération
+//       p.setDate(datePerformance);
+//       s.persist(p);
+//       u1.getPerformances().add(p);
+////       c.getPerformances().add(p);
+//   }
+        t.commit();
+        s.close();
+
     }
+}

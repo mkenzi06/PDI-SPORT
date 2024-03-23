@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 import org.hibernate.*;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -18,7 +19,6 @@ import org.hibernate.*;
  */
 @Entity
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,6 @@ public class User {
     private String password;
     @Lob
     private byte[] photoProfil;
-
 
     @Temporal(TemporalType.DATE)
     private Date dateNaissance;
@@ -45,7 +44,7 @@ public class User {
         this.prenom = prenom;
         this.pseudo = pseudo;
         this.password = password;
-        
+
         this.sportsPratiques = sportsPratiques;
     }
 
@@ -57,13 +56,15 @@ public class User {
     )
 
     private List<Sport> sportsPratiques = new ArrayList<>();
-    @OneToMany(mappedBy = "destinataire", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "destinataire", cascade = CascadeType.ALL)
     @JoinColumn(name = "destinataire_id")
     private List<DemandeAmi> demandesRecues = new ArrayList<>();
 
-    @OneToMany(mappedBy = "demandeur", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "demandeur", cascade = CascadeType.ALL)
     @JoinColumn(name = "demandeur_id")
     private List<DemandeAmi> demandesEnvoyees = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Performances> performances = new ArrayList<>();
 
     public void envoyerDemandeAmi(User destinataire) {
         DemandeAmi demande = new DemandeAmi();
@@ -106,13 +107,15 @@ public class User {
     public Long getId() {
         return id;
     }
+
     /**
      * @return the photoProfil
      */
     public byte[] getPhotoProfil() {
         return photoProfil;
     }
-       /**
+
+    /**
      * @param photoProfil the photoProfil to set
      */
     public void setPhotoProfil(byte[] photoProfil) {
@@ -255,5 +258,30 @@ public class User {
         }
 
         return amis;
+    }
+
+    /**
+     * @return the performances
+     */
+    public List<Performances> getPerformances() {
+        return performances;
+    }
+
+    /**
+     * @param performances the performances to set
+     */
+    public void setPerformances(List<Performances> performances) {
+        this.performances = performances;
+    }
+
+    public static User getUserByPseudo(String pseudo) {
+        User user = null;
+        Session session = DBConnection.getSession();
+        
+        Criteria criteria = session.createCriteria(User.class);
+        criteria.add(Restrictions.eq("pseudo", pseudo));
+        user = (User) criteria.uniqueResult();
+
+        return user;
     }
 }

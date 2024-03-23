@@ -41,7 +41,10 @@ public class UserDataConnect {
             read.commit();
             session.close();
             return u1;
+        }else{
+            session.close();
         }
+            
         
         return null;
     }

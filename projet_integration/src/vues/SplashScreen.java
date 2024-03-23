@@ -19,9 +19,11 @@ public class SplashScreen extends javax.swing.JFrame {
      * Creates new form SplashScreen
      */
     public SplashScreen() {
+         setUndecorated(true);
         initComponents();
         setTitle("PerforMates");
-           setLocationRelativeTo(this);
+        setLocationRelativeTo(this);
+       
         new Thread(new Runnable() {//histoire de processeur
             @Override //redefinie
             public void run() {
@@ -34,17 +36,10 @@ public class SplashScreen extends javax.swing.JFrame {
                     }
                 }
 //                JOptionPane.showMessageDialog(null, "Bienvenue ici chez PerforMates");
-                  Connexion x = new Connexion();
-                  x.setVisible(true);
-                  setVisible(false);
-                  
-                  
-                  
-                  
-                  
-               
+                Connexion x = new Connexion();
+                x.setVisible(true);
+                setVisible(false);
 
-                
             }
         }).start();
     }
