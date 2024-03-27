@@ -434,8 +434,6 @@ public class Inscription extends javax.swing.JFrame {
                 // Associer les sports sélectionnés à l'utilisateur
                 if (cyclisme.isSelected()) {
                     Cyclisme s = new Cyclisme();
-                    s.setDistanceTotaleParcourue(0);
-                    s.setTempsPerformance(0);
                     session.persist(s);
                     utilisateur.getSportsPratiques().add(s);
                 }

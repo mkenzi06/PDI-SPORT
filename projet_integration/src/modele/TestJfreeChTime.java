@@ -66,10 +66,12 @@ public class TestJfreeChTime extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
+                    if (p.getSport() instanceof Cyclisme) {
                     double value = isDistance ? ((Cyclisme) p.getSport()).getDistanceTotaleParcourue() : ((Cyclisme) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
                     dataset.addValue(value, isDistance ? "Distance Parcourue" : "Temps Parcouru", formattedDate);
+                    }
                 }
             }
             transaction.commit();
@@ -163,6 +165,7 @@ public class TestJfreeChTime extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
+                    if (p.getSport() instanceof Cyclisme) {
                     double value = isDistance ? ((Cyclisme) p.getSport()).getDistanceTotaleParcourue() : ((Cyclisme) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
@@ -170,6 +173,7 @@ public class TestJfreeChTime extends JFrame {
                         dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
                     } else if (performancesUser2.contains(p)) {
                         dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
+                    }
                     }
                 }
             }

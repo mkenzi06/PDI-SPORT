@@ -5,11 +5,16 @@
  */
 package vues;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modele.Cyclisme;
 import modele.DBConnection;
 import modele.Halterophilie;
+import modele.JfreeChHalterophilie;
+import modele.Performances;
 import modele.Sport;
 import modele.User;
 import modele.WindSurf;
@@ -32,28 +37,49 @@ public class HalterophilieInterface extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
         this.u = us;
+        afficheTable();
     }
 
-    private void affichedonne() {
-//        jLabel6.setText(u.getNom());
+   
+    private HalterophilieInterface() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    private void afficheTable() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User utilisateur = (User) session.get(User.class, u.getId());
-        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-        for (Sport sport : sportsPratiques) {
-            if (sport instanceof Halterophilie) {
-                Halterophilie cyclisme = (Halterophilie) sport;
-                ps.setText(String.valueOf(cyclisme.getPoidsLeve()));
-                nr.setText(String.valueOf(cyclisme.getNombreRepetitions()));
-                ns.setText(String.valueOf(cyclisme.getNombreSeries()));
+//        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
+        List<Performances> performancesUtilisateur = utilisateur.getPerformances();
+
+// Créer un tableau pour stocker les performances spécifiques au cyclisme
+        List<Performances> performancesCyclisme = new ArrayList<>();
+
+// Filtrer les performances pour ne garder que celles liées au cyclisme
+        for (Performances performance : performancesUtilisateur) {
+            if (performance.getSport() instanceof Halterophilie) {
+                performancesCyclisme.add(performance);
             }
         }
+
+        // Create a table model to display the performances
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Date");
+        model.addColumn("Poids souleves");
+        model.addColumn("Nombre repetitions");
+        for (Performances performance : performancesCyclisme) {
+            Object[] row = new Object[3];
+            row[0] = performance.getDate();
+            row[1] = ((Halterophilie) performance.getSport()).getPoidsLeve();
+            row[2] = ((Halterophilie) performance.getSport()).getNombreRepetitions();
+            model.addRow(row);
+        }
+
+        // Set the table model to the JTable
+        jTable2.setModel(model);
+        
         transaction.commit();
         session.close();
-    }
-
-    private HalterophilieInterface() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     /**
@@ -68,147 +94,186 @@ public class HalterophilieInterface extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        ps = new javax.swing.JTextField();
-        nr = new javax.swing.JTextField();
-        ns = new javax.swing.JTextField();
+        dparcour = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jCalendar1 = new com.toedter.calendar.JCalendar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel1.setText("HALTEROPHILIE");
+        jLabel1.setText("Halterophilie");
 
-        jLabel2.setText("poids souleves");
+        jLabel2.setText("Poids souleves :");
 
-        jLabel3.setText("nombre repetitions");
+        jLabel3.setText("Nombre repetitions:");
 
-        jLabel4.setText("nombre series");
-
-        ps.addActionListener(new java.awt.event.ActionListener() {
+        dparcour.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                psActionPerformed(evt);
+                dparcourActionPerformed(evt);
             }
         });
 
-        nr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nrActionPerformed(evt);
-            }
-        });
-
-        ns.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nsActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Modifier");
+        jButton1.setText("Ajouter perf");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Afficher");
+        jButton2.setText("Afficher poids souleves en fonction des jours");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jLabel5.setText("KG");
+        jLabel4.setText("KG");
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable2);
+
+        jButton3.setText("Afficher les repetitions en fonction des jours");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(143, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(114, 114, 114))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2))
+                        .addGap(192, 192, 192)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addContainerGap()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(nr, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-                            .addComponent(ps)
-                            .addComponent(ns))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addContainerGap())
+                        .addComponent(jLabel2)
+                        .addGap(20, 20, 20)
+                        .addComponent(dparcour, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(323, 323, 323)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(99, 99, 99))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(512, 584, Short.MAX_VALUE)
+                            .addComponent(jButton3)))
+                    .addGap(0, 25, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel1)
-                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dparcour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(ps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel4))
+                .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(nr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(ns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGap(58, 58, 58))))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap(25, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(86, 86, 86)
+                    .addComponent(jButton3)
+                    .addGap(0, 9, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void psActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psActionPerformed
+    private void dparcourActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dparcourActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_psActionPerformed
-
-    private void nrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nrActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nrActionPerformed
-
-    private void nsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nsActionPerformed
+    }//GEN-LAST:event_dparcourActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-        if (Float.parseFloat(ps.getText()) < 0 || Float.parseFloat(nr.getText()) < 0 || Float.parseFloat(ns.getText()) < 0) {
+        if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar1.getDate() == null || Integer.parseInt(dparcour.getText()) < 0 || Integer.parseInt(jTextField1.getText()) < 0) {
             JOptionPane.showMessageDialog(this, "ERREUR", "ERREUR", JOptionPane.ERROR_MESSAGE);
         } else {
             User utilisateur = (User) session.get(User.class, u.getId());
-            List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-            for (Sport sport : sportsPratiques) {
-                if (sport instanceof Halterophilie) {
-                    Halterophilie cyclisme = (Halterophilie) sport;
-                    cyclisme.setPoidsLeve(Integer.parseInt(ps.getText()));
-                    cyclisme.setNombreSeries(Integer.parseInt(ns.getText()));
-                    cyclisme.setNombreRepetitions(Integer.parseInt(nr.getText()));
-                    session.update(cyclisme);
-                    transaction.commit();
-                    JOptionPane.showMessageDialog(this, "Mise a jour avec succes !", "PerforMates", JOptionPane.INFORMATION_MESSAGE);
-                    session.close();
-                }
-            }
-        }
+            Halterophilie c = new Halterophilie();
+            c.setPoidsLeve(Integer.parseInt(dparcour.getText()));
+            c.setNombreRepetitions(Integer.parseInt(jTextField1.getText()));
+            session.persist(c);
+
+            Performances p = new Performances();
+            p.setUser(utilisateur);
+            p.setSport(c);
+            p.setDate(jCalendar1.getDate());
+            session.persist(p);
+
+            utilisateur.getPerformances().add(p); // Ajoutez la performance à la liste de performances de l'utilisateur
+
+            transaction.commit();
+            session.close();
+
+            JOptionPane.showMessageDialog(this, "Ajout de la perforMance !", "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+            afficheTable();
+
+           }
     }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        JfreeChHalterophilie j = new JfreeChHalterophilie(u, true);
+        j.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+     
+
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,15 +311,17 @@ public class HalterophilieInterface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField dparcour;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField nr;
-    private javax.swing.JTextField ns;
-    private javax.swing.JTextField ps;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

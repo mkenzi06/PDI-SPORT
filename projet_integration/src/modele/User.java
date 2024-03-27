@@ -66,41 +66,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Performances> performances = new ArrayList<>();
 
-    public void envoyerDemandeAmi(User destinataire) {
-        DemandeAmi demande = new DemandeAmi();
-        demande.setDemandeur(this);
-        demande.setDestinataire(destinataire);
-        getDemandesEnvoyees().add(demande);
-        destinataire.getDemandesRecues().add(demande);
-    }
 
-    public void accepterDemandeAmi(DemandeAmi demande) {
-        if (demandesRecues.contains(demande)) {
-            int choix = JOptionPane.showConfirmDialog(
-                    null,
-                    "Accepter la demande d'ami de " + demande.getDemandeur().getPseudo() + "?",
-                    "Confirmation",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (choix == JOptionPane.YES_OPTION) {
-                // Ajoutez ici la logique pour accepter la demande d'ami
-                // Par exemple, créer une relation d'amitié, etc.
-
-                // Supprimer la demande des listes
-                demandesRecues.remove(demande);
-                demande.getDemandeur().getDemandesEnvoyees().remove(demande);
-                JOptionPane.showMessageDialog(null, "Demande d'ami acceptée !");
-            } else {
-                // Refuser la demande (éventuellement ajouter une logique spécifique)
-                demandesRecues.remove(demande);
-                demande.getDemandeur().getDemandesEnvoyees().remove(demande);
-                JOptionPane.showMessageDialog(null, "Demande d'ami refusée !");
-            }
-        }
-    }
-
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<DataSport> dataSports = new ArrayList<>();
     /**
      * @return the id
      */
@@ -241,24 +207,7 @@ public class User {
         this.demandesEnvoyees = demandesEnvoyees;
     }
 
-    public List<User> getAmis() {
-        List<User> amis = new ArrayList<>();
 
-        // Parcourir les demandes acceptées
-        for (DemandeAmi demande : demandesRecues) {
-            if (demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
-                amis.add(demande.getDemandeur());
-            }
-        }
-
-        for (DemandeAmi demande : demandesEnvoyees) {
-            if (demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.EN_ATTENTE) {
-                amis.add(demande.getDestinataire());
-            }
-        }
-
-        return amis;
-    }
 
     /**
      * @return the performances

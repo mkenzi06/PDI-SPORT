@@ -3,23 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseCap.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/JfreeChCap.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseCyclisme.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/CourseAPied.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/DemandeAmi.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/RunningInterf.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Sport.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Test.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/TestInscri.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/User.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/TestRetrieve.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Cyclisme.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/TestAmis.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/UserDataConnect.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/CyclismeInterf.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/TestJfreeChTime.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Connexion.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Profil.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/DataInit.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/SplashScreen.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/AjoutAmi.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Inscription.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Natation.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/ModifSport.java</file>
         </group>
     </open-files>
 </project-private>

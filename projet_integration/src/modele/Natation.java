@@ -11,54 +11,62 @@ import javax.persistence.*;
  */
 @Entity
 public class Natation extends Sport {
-    private double distanceTotaleNagee;
-    private double tempsPourNagerDistance;
-    private int nombreBrassesParMinute;
+      
+    private double crawlTimePercentage;
 
-    /**
-     * @return the distanceTotaleNagee
-     */
-    public double getDistanceTotaleNagee() {
-        return distanceTotaleNagee;
-    }
+    
+    private double papillonTimePercentage;
 
-    /**
-     * @param distanceTotaleNagee the distanceTotaleNagee to set
-     */
-    public void setDistanceTotaleNagee(double distanceTotaleNagee) {
-        this.distanceTotaleNagee = distanceTotaleNagee;
-    }
+    @Column(name = "total_seance_time")
+    private int totalSessionTime; 
+    
 
-    /**
-     * @return the tempsPourNagerDistance
-     */
-    public double getTempsPourNagerDistance() {
-        return tempsPourNagerDistance;
-    }
 
-    /**
-     * @param tempsPourNagerDistance the tempsPourNagerDistance to set
-     */
-    public void setTempsPourNagerDistance(double tempsPourNagerDistance) {
-        this.tempsPourNagerDistance = tempsPourNagerDistance;
-    }
-
-    /**
-     * @return the nombreBrassesParMinute
-     */
-    public int getNombreBrassesParMinute() {
-        return nombreBrassesParMinute;
-    }
-
-    /**
-     * @param nombreBrassesParMinute the nombreBrassesParMinute to set
-     */
-    public void setNombreBrassesParMinute(int nombreBrassesParMinute) {
-        this.nombreBrassesParMinute = nombreBrassesParMinute;
-    }
     @Override
            public String getNom() {
         return "Natation";
+    }
+
+    /**
+     * @return the crawlTimePercentage
+     */
+    public double getCrawlTimePercentage() {
+        return crawlTimePercentage;
+    }
+
+    /**
+     * @param crawlTimePercentage the crawlTimePercentage to set
+     */
+    public void setCrawlTimePercentage(double crawlTimePercentage) {
+        this.crawlTimePercentage = crawlTimePercentage;
+    }
+
+    /**
+     * @return the papillonTimePercentage
+     */
+    public double getPapillonTimePercentage() {
+        return papillonTimePercentage;
+    }
+
+    /**
+     * @param papillonTimePercentage the papillonTimePercentage to set
+     */
+    public void setPapillonTimePercentage(double papillonTimePercentage) {
+        this.papillonTimePercentage = papillonTimePercentage;
+    }
+
+    /**
+     * @return the totalSessionTime
+     */
+    public int getTotalSessionTime() {
+        return totalSessionTime;
+    }
+
+    /**
+     * @param totalSessionTime the totalSessionTime to set
+     */
+    public void setTotalSessionTime(int totalSessionTime) {
+        this.totalSessionTime = totalSessionTime;
     }
 
     

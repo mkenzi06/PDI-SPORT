@@ -5,9 +5,12 @@
  */
 package vues;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import modele.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -17,7 +20,7 @@ import org.hibernate.Transaction;
  * @author HP
  */
 public class NatationInterface extends javax.swing.JFrame {
-    private User ui;
+    private User u;
     /**
      * Creates new form NatationInterface
      */
@@ -25,31 +28,53 @@ public class NatationInterface extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
-        this.ui=us;
-        affichedonne();
+        this.u=us;
+        afficheTable();
+        
     }
+    private void afficheTable() {
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
+        User utilisateur = (User) session.get(User.class, u.getId());
+//        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
+        List<Performances> performancesUtilisateur = utilisateur.getPerformances();
 
+// Créer un tableau pour stocker les performances spécifiques au cyclisme
+        List<Performances> performances = new ArrayList<>();
+
+// Filtrer les performances pour ne garder que celles liées au cyclisme
+        for (Performances performance : performancesUtilisateur) {
+            if (performance.getSport() instanceof Natation) {
+                performances.add(performance);
+            }
+        }
+
+        // Create a table model to display the performances
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Date");
+        model.addColumn("Crawl minute");
+        model.addColumn("Papillon minute");
+        model.addColumn("total minute");
+        for (Performances performance : performances) {
+            Object[] row = new Object[4];
+            row[0] = performance.getDate();
+            row[1] = ((Natation) performance.getSport()).getCrawlTimePercentage();
+            row[2] = ((Natation) performance.getSport()).getPapillonTimePercentage();
+            row[3] = ((Natation) performance.getSport()).getTotalSessionTime();
+            model.addRow(row);
+        }
+
+        
+        jTable2.setModel(model);
+        
+        transaction.commit();
+        session.close();
+        
+    }
     private NatationInterface() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-        private void affichedonne() {
-//        jLabel6.setText(u.getNom());
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        User utilisateur = (User) session.get(User.class, ui.getId());
-        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-        Natation n = new Natation();
-        for (Sport sport : sportsPratiques) {
-            if (sport instanceof Natation) {
-                Natation cyclisme = (Natation) sport;
-                dparcour.setText(String.valueOf(cyclisme.getDistanceTotaleNagee()));
-                ttemps.setText(String.valueOf(cyclisme.getTempsPourNagerDistance()));
-                jTextField1.setText(String.valueOf(cyclisme.getNombreBrassesParMinute()));
-            }
-        }
-        transaction.commit();
-        session.close();
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -61,23 +86,29 @@ public class NatationInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        dparcour = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        ttemps = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        dparcour = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jCalendar1 = new com.toedter.calendar.JCalendar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jButton3 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel1.setText("NATATION");
+        jLabel1.setText("Natation");
 
-        jLabel4.setText("m");
+        jLabel2.setText("Duree seance totale :");
+
+        jLabel3.setText("Temps passe crawl:");
 
         dparcour.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,98 +116,144 @@ public class NatationInterface extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Afficher");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("min");
-
-        ttemps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ttempsActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Distance parcourue:");
-
-        jButton1.setText("Modifier");
+        jButton1.setText("Ajouter perf");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Temps:");
+        jLabel4.setText("min");
 
-        jLabel6.setText("nbr brasses totales:");
+        jLabel5.setText("min");
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable2);
+
+        jButton3.setText("Afficher les nages en camembert selon un jour choisi dans la table");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("min");
+
+        jLabel7.setText("Temps passe papillon :");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(119, 119, 119))
             .addGroup(layout.createSequentialGroup()
+                .addGap(88, 88, 88)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(219, 219, 219)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel6)
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(221, Short.MAX_VALUE))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel6))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(jButton1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                                .addComponent(jButton3)
+                                .addContainerGap())))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addGap(66, 66, 66))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(138, 138, 138)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel2))
+                    .addGap(0, 9, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
                     .addGap(26, 26, 26)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(dparcour, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                        .addComponent(ttemps, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel5))
-                    .addContainerGap(139, Short.MAX_VALUE)))
+                    .addComponent(dparcour, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(15, 15, 15)
+                    .addComponent(jLabel4)
+                    .addGap(194, 194, 194)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 12, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(109, 109, 109)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)))
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addGap(44, 44, 44))
+                    .addComponent(jLabel7)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(26, 26, 26)
+                        .addComponent(jButton3)
+                        .addGap(184, 184, 184))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(69, 69, 69)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
+                    .addGap(77, 77, 77)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(dparcour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4))
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(ttemps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5))
-                    .addContainerGap(173, Short.MAX_VALUE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(3, 3, 3)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel4))))
+                    .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(53, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(60, 253, Short.MAX_VALUE)))
         );
 
         pack();
@@ -186,37 +263,79 @@ public class NatationInterface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dparcourActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void ttempsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ttempsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ttempsActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        if (Float.parseFloat(ttemps.getText()) < 0 || Float.parseFloat(ttemps.getText()) < 0) {
-            JOptionPane.showMessageDialog(this, "ERREUR", "ERREUR", JOptionPane.ERROR_MESSAGE);
-        }else{
-            User utilisateur = (User) session.get(User.class, ui.getId());
-            List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-            for (Sport sport : sportsPratiques) {
-                if (sport instanceof Natation) {
-                    Natation cyclisme = (Natation) sport;
-                    cyclisme.setDistanceTotaleNagee(Float.parseFloat(dparcour.getText()));
-                    cyclisme.setTempsPourNagerDistance(Integer.parseInt(ttemps.getText()));
-                    cyclisme.setTempsPourNagerDistance(Integer.parseInt(jTextField1.getText()));
-                    
-                    session.update(cyclisme);
-                    transaction.commit();
-                    JOptionPane.showMessageDialog(this, "Mise a jour avec succes !","PerforMates",JOptionPane.INFORMATION_MESSAGE);
-                    session.close();
-                }
-            }
-    }//GEN-LAST:event_jButton1ActionPerformed
+       Session session = DBConnection.getSession();
+Transaction transaction = session.beginTransaction();
+
+if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar1.getDate() == null || 
+    Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0 || 
+    jTextField2.getText().isEmpty() || Double.parseDouble(jTextField2.getText()) < 0) {
+    JOptionPane.showMessageDialog(this, "Erreur de saisie. Veuillez remplir tous les champs correctement.", "Erreur", JOptionPane.ERROR_MESSAGE);
+} else {
+    // Récupération de l'utilisateur
+    User utilisateur = (User) session.get(User.class, u.getId());
+
+    // Récupération des valeurs des champs
+    
+    int totalSessionTime = Integer.parseInt(dparcour.getText());
+    double crawlPercentage = Double.parseDouble(jTextField1.getText());
+    double papillonPercentage = Double.parseDouble(jTextField2.getText());
+
+    // Vérification que les pourcentages de papillon et crawl ne dépassent pas le temps total de la séance
+    if (crawlPercentage + papillonPercentage > totalSessionTime || crawlPercentage > totalSessionTime || papillonPercentage > totalSessionTime) {
+        JOptionPane.showMessageDialog(this, "Les pourcentages de papillon et de crawl ne peuvent pas dépasser le temps total de la séance ni dépasser 100%.", "Erreur", JOptionPane.ERROR_MESSAGE);
+    } else {
+        // Création de l'objet Natation
+        Natation natation = new Natation();
+        natation.setCrawlTimePercentage(crawlPercentage);
+        natation.setPapillonTimePercentage(papillonPercentage);
+        natation.setTotalSessionTime(totalSessionTime);
+
+        // Persiste l'objet Natation
+        session.persist(natation);
+
+        // Création de l'objet Performances
+        Performances performances = new Performances();
+        performances.setUser(utilisateur);
+        performances.setSport(natation);
+        performances.setDate(jCalendar1.getDate());
+
+        // Persiste l'objet Performances
+        session.persist(performances);
+
+        // Ajoute la performance à la liste de performances de l'utilisateur
+        utilisateur.getPerformances().add(performances);
+
+        // Commit de la transaction et fermeture de la session
+        transaction.commit();
+        session.close();
+
+        // Affichage du message de succès
+        JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+        afficheTable();
     }
+}
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+       int selectedRow = jTable2.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Veuillez sélectionner une ligne dans la table.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+       Date selectedDate = (Date) jTable2.getValueAt(selectedRow, 0);
+       ClasseCamembert c = new ClasseCamembert(u, selectedDate);
+       c.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -255,14 +374,18 @@ public class NatationInterface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField dparcour;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField ttemps;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

@@ -381,7 +381,8 @@ public class Profil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mesportsbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mesportsbuttonActionPerformed
-        // TODO add your handling code here:
+        ModifSport m = new ModifSport(this.u);
+        m.setVisible(true);
     }//GEN-LAST:event_mesportsbuttonActionPerformed
 
     private void rechamisbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechamisbuttonActionPerformed
@@ -549,7 +550,7 @@ public class Profil extends javax.swing.JFrame {
                 Session sis = DBConnection.getSession();
                 Transaction tttii = sis.beginTransaction();
                 User utilisa = (User) sis.get(User.class, u.getId());
-                RunningInterface courseAPiedInterface = new RunningInterface(utilisa);
+                RunningInterf courseAPiedInterface = new RunningInterf(utilisa);
                 courseAPiedInterface.setVisible(true);
                 break;
             case "Natation":

@@ -60,6 +60,7 @@ public class VitesseCyclisme extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : sortedPerformances) {
+                    if (p.getSport() instanceof Cyclisme) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
                     double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
                     double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
@@ -67,6 +68,7 @@ public class VitesseCyclisme extends JFrame {
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
                     dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
+                    }
                 }
             }
             transaction.commit();
@@ -170,6 +172,7 @@ public class VitesseCyclisme extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
+                    if (p.getSport() instanceof Cyclisme) {
                     double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
                     double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
                     double speed = distance / temps;
@@ -179,6 +182,7 @@ public class VitesseCyclisme extends JFrame {
                         dataset.addValue(speed, user1.getPseudo() +  "Vitesse(km/h)", formattedDate);
                     } else if (performancesUser2.contains(p)) {
                         dataset.addValue(speed, user2.getPseudo() +  "Vitesse(km/h)", formattedDate);
+                    }
                     }
                 }
             }
