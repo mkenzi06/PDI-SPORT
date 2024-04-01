@@ -35,15 +35,14 @@ public class RunningInterf extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
         this.u = us;
-        
+
         afficheTable();
     }
-    
+
     private RunningInterf() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
     private void afficheTable() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -76,10 +75,10 @@ public class RunningInterf extends javax.swing.JFrame {
 
         // Set the table model to the JTable
         jTable2.setModel(model);
-        
+
         transaction.commit();
         session.close();
-        
+
     }
 
     /**
@@ -215,76 +214,81 @@ public class RunningInterf extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-
-        // Vérifier si une date future est saisie
-        if (jCalendar1.getDate().after(new Date())) {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Vérifier si une performance existe déjà à cette date pour l'utilisateur
-        User utilisateur = (User) session.get(User.class, u.getId());
-        Date selectedDate = jCalendar1.getDate();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String selectedDateString = sdf.format(jCalendar1.getDate());
-
-        // Comparer avec la date existante
-        
-        Performances existingPerformance = null;
-        for (Performances performance : utilisateur.getPerformances()) {
-            String existingDateString = sdf.format(performance.getDate());
-            if (existingDateString.equals(selectedDateString) && performance.getSport().estCap()) {
-                existingPerformance = performance;
-                break;
+        try {
+            if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+                JOptionPane.showMessageDialog(this, "Verifier la saisie des donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        }
+            // Vérifier si une date future est saisie
+            if (jCalendar1.getDate().after(new Date())) {
+                JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        if (existingPerformance != null) {
-            // Demander à l'utilisateur s'il souhaite modifier la performance existante
-            int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
-                // Mettre à jour les valeurs de la performance existante
-                CourseAPied cap = (CourseAPied) existingPerformance.getSport();
-                cap.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
-                cap.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
-                existingPerformance.setDate(selectedDate);
-                session.update(cap);
-                session.update(existingPerformance);
+            // Vérifier si une performance existe déjà à cette date pour l'utilisateur
+            User utilisateur = (User) session.get(User.class, u.getId());
+            Date selectedDate = jCalendar1.getDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String selectedDateString = sdf.format(jCalendar1.getDate());
+
+            // Comparer avec la date existante
+            Performances existingPerformance = null;
+            for (Performances performance : utilisateur.getPerformances()) {
+                String existingDateString = sdf.format(performance.getDate());
+                if (existingDateString.equals(selectedDateString) && performance.getSport().estCap()) {
+                    existingPerformance = performance;
+                    break;
+                }
+            }
+
+            if (existingPerformance != null) {
+                // Demander à l'utilisateur s'il souhaite modifier la performance existante
+                int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    // Mettre à jour les valeurs de la performance existante
+                    CourseAPied cap = (CourseAPied) existingPerformance.getSport();
+                    cap.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
+                    cap.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
+                    existingPerformance.setDate(selectedDate);
+                    session.update(cap);
+                    session.update(existingPerformance);
+                    transaction.commit();
+                    session.close();
+                    JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    afficheTable();
+                    return;
+                } else {
+                    return;
+                }
+            }
+
+            // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
+            if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+                JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            } else {
+                CourseAPied c = new CourseAPied();
+                c.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
+                c.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
+                session.persist(c);
+
+                Performances p = new Performances();
+                p.setUser(utilisateur);
+                p.setSport(c);
+                p.setDate(selectedDate);
+                session.persist(p);
+
+                utilisateur.getPerformances().add(p);
                 transaction.commit();
                 session.close();
-                JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
                 afficheTable();
-                return;
-            }else{
-                return;
             }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage().toString(), "erreur", JOptionPane.ERROR_MESSAGE);
         }
-
-        // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
-        if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
-            JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        } else {
-            CourseAPied c = new CourseAPied();
-            c.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
-            c.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
-            session.persist(c);
-
-            Performances p = new Performances();
-            p.setUser(utilisateur);
-            p.setSport(c);
-            p.setDate(selectedDate);
-            session.persist(p);
-
-            utilisateur.getPerformances().add(p);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
-            afficheTable();
-        }
-
 
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 //        TestJfreeChTime tj = new TestJfreeChTime(this.u, true);
 //        tj.setVisible(true);
@@ -296,9 +300,9 @@ public class RunningInterf extends javax.swing.JFrame {
         // TODO add your handling code here
         //        TestJfreeCh tj = new TestJfreeCh(this.u, false);
         //        tj.setVisible(true);
-         JfreeChCap c = new JfreeChCap(this.u, false);
+        JfreeChCap c = new JfreeChCap(this.u, false);
         c.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

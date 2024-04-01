@@ -85,17 +85,17 @@ public class TestJfreeChTimeWind extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list) {
+    private void fillWindFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user);
-        for (String friend : cyclistFriends) {
+        List<String> Friends = getHalFriends(user);
+        for (String friend : Friends) {
             model.addElement(friend);
         }
         list.setModel(model);
     }
 
-    private List<String> getCyclistFriends(User user) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getHalFriends(User user) {
+        List<String> Friends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -109,8 +109,8 @@ public class TestJfreeChTimeWind extends JFrame {
                         User demandeur = demande.getDemandeur();
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-                            cyclistFriends.add(u1.getPseudo());
+                        if (pratiqueWind(u1)) {
+                            Friends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -121,8 +121,8 @@ public class TestJfreeChTimeWind extends JFrame {
                     if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                        if (u2 != null && pratiqueWind(u2) && u2.getPseudo() != null) {
+                            Friends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -136,7 +136,7 @@ public class TestJfreeChTimeWind extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return Friends;
     }
 
     private DefaultCategoryDataset createDataset2(User user1, User user2) {
@@ -190,50 +190,9 @@ public class TestJfreeChTimeWind extends JFrame {
         return dataset;
     }
 
-    private void fillComboBox(User user, JList<String> userComboBox1) {
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        User us = (User) session.get(User.class, user.getId());
-        try {
-            List<DemandeAmi> demandesRecues = us.getDemandesRecues();
-            List<DemandeAmi> demandesEnvoyees = us.getDemandesEnvoyees();
+    
 
-            if (demandesRecues != null) {
-                for (DemandeAmi demande : demandesRecues) {
-                    if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
-                        User demandeur = demande.getDemandeur();
-                        User u1 = (User) session.get(User.class, demandeur.getId());
-                        System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-//                        userComboBox.addItem(u1.getPseudo());
-                        }
-                    }
-                }
-            }
-
-            if (demandesEnvoyees != null) {
-                for (DemandeAmi demande : demandesEnvoyees) {
-                    if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
-
-                        User destinataire = demande.getDestinataire();
-                        User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-//                        userComboBox.addItem(destinataire.getPseudo());
-                        }
-                    }
-                }
-            }
-
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    private boolean pratiqueCyclisme(User user) {
+    private boolean pratiqueWind(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estWindsurf()) {
@@ -254,7 +213,7 @@ public class TestJfreeChTimeWind extends JFrame {
         JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         this.isDistance = isDistance;
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox);
+        fillWindFriendsList(u, userComboBox);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());

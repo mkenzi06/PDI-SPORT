@@ -6,6 +6,7 @@
 package modele;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -61,20 +62,20 @@ public class CamembertTennis extends JFrame {
                 // Calculer les temps passés pour chaque style de nage
                 for (Performances performanc : performances) {
                     if (performanc.getSport().estTennis()) {
-                        Tennis swimming = (Tennis) performanc.getSport();
-                        totalsets += swimming.getNombresetsmatch();
+                        Tennis s = (Tennis) performanc.getSport();
+                        totalsets += s.getNombresetsmatch();
 
-                        Sets += swimming.getNombreSetsGagnes();
+                        Sets += s.getNombreSetsGagnes();
                     }
                 }
-                double crawlPercentage = (double) Sets / totalsets * 100;
+                double c = (double) Sets / totalsets * 100;
 
-                double freeSwimmingPercentage = 100 - crawlPercentage;
+                double free = 100 - c;
 
                 // Ajouter les valeurs au dataset
-                dataset.setValue("sets gagnes", crawlPercentage);
+                dataset.setValue("sets gagnes", c);
 
-                dataset.setValue("sets perdues", freeSwimmingPercentage);
+                dataset.setValue("sets perdues", free);
 
             }
             transaction.commit();
@@ -87,16 +88,16 @@ public class CamembertTennis extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list, Date d) {
+    private void filltennisFriendsList(User user, JList<String> list, Date d) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user, d);
-        for (String friend : cyclistFriends) {
+        List<String> Friends = getTennisFriends(user, d);
+        for (String friend : Friends) {
             model.addElement(friend);
         }
         list.setModel(model);
     }
 
-    private boolean pratiqueNatation(User user) {
+    private boolean pratiqueTennis(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estTennis()) {
@@ -126,8 +127,8 @@ public class CamembertTennis extends JFrame {
         }
     }
 
-    private List<String> getCyclistFriends(User user, Date date) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getTennisFriends(User user, Date date) {
+        List<String> Friends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -141,8 +142,8 @@ public class CamembertTennis extends JFrame {
                         User demandeur = demande.getDemandeur();
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueNatation(u1) && hasPerformanceOnDate(u1, date)) {
-                            cyclistFriends.add(u1.getPseudo());
+                        if (pratiqueTennis(u1) && hasPerformanceOnDate(u1, date)) {
+                            Friends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -153,8 +154,8 @@ public class CamembertTennis extends JFrame {
                     if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueNatation(u2) && u2.getPseudo() != null && hasPerformanceOnDate(u2, date)) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                        if (u2 != null && pratiqueTennis(u2) && u2.getPseudo() != null && hasPerformanceOnDate(u2, date)) {
+                            Friends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -168,7 +169,7 @@ public class CamembertTennis extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return Friends;
     }
 
     private DefaultPieDataset createDataset2(User user1, User user2, Date d) {
@@ -253,7 +254,7 @@ public class CamembertTennis extends JFrame {
 
         JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox, d);
+        filltennisFriendsList(u, userComboBox, d);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
@@ -282,9 +283,9 @@ public class CamembertTennis extends JFrame {
                         Session session = DBConnection.getSession();
                         Transaction transaction = session.beginTransaction();
                         User user = (User) session.get(User.class, us.getId());
-                        DefaultPieDataset dataset2 = createDataset2(u, user, d); // Mettre à jour le dataset avec les deux utilisateurs
+                        DefaultPieDataset dataset2 = createDataset(u, d); // Mettre à jour le dataset avec les deux utilisateurs
                         JFreeChart chart1 = ChartFactory.createPieChart(
-                                "Performances Tennis\t " + u.getPseudo() + " vs\t " + user.getPseudo(), // Titre du graphique
+                                "Performances Tennis\t " + u.getPseudo()+ " "+d, // Titre du graphique
 
                                 dataset2, // Ensemble de données
                                 // Orientation du graphique (horizontal)
@@ -292,10 +293,24 @@ public class CamembertTennis extends JFrame {
                                 true, // Inclure les tooltips
                                 true // Inclure les URLs
                         );
+                        DefaultPieDataset dataset = createDataset(user, d); // Mettre à jour le dataset avec les deux utilisateurs
+                        JFreeChart chart12 = ChartFactory.createPieChart(
+                                "Performances Tennis\t " + user.getPseudo() + " "+d, // Titre du graphique
 
-                        ChartPanel chartPan = new ChartPanel(chart1);
+                                dataset, // Ensemble de données
+                                // Orientation du graphique (horizontal)
+                                true, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                                true, // Inclure les tooltips
+                                true // Inclure les URLs
+                        );
+
+                        ChartPanel chartPanel1 = new ChartPanel(chart1);
+                        ChartPanel chartPanel2 = new ChartPanel(chart12);
+
                         chartPanelContainer.removeAll();
-                        chartPanelContainer.add(chartPan, BorderLayout.CENTER);
+                        chartPanelContainer.setLayout(new GridLayout(2, 1));
+                        chartPanelContainer.add(chartPanel1);
+                        chartPanelContainer.add(chartPanel2);
                         chartPanelContainer.revalidate();
                         chartPanelContainer.repaint();
                     }

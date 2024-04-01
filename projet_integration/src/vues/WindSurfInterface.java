@@ -219,7 +219,11 @@ public class WindSurfInterface extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-
+        try{
+          if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Verifier la saisie des donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         // Vérifier si une date future est saisie
         if (jCalendar1.getDate().after(new Date())) {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -284,6 +288,9 @@ public class WindSurfInterface extends javax.swing.JFrame {
             session.close();
             JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
             afficheTable();
+        }
+         } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage().toString(),"erreur",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

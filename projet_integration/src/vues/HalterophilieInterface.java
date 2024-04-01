@@ -54,12 +54,12 @@ public class HalterophilieInterface extends javax.swing.JFrame {
         List<Performances> performancesUtilisateur = utilisateur.getPerformances();
 
 // Créer un tableau pour stocker les performances spécifiques au cyclisme
-        List<Performances> performancesCyclisme = new ArrayList<>();
+        List<Performances> performancesHal = new ArrayList<>();
 
 // Filtrer les performances pour ne garder que celles liées au cyclisme
         for (Performances performance : performancesUtilisateur) {
             if (performance.getSport().estHalterophilie()) {
-                performancesCyclisme.add(performance);
+                performancesHal.add(performance);
             }
         }
 
@@ -68,7 +68,7 @@ public class HalterophilieInterface extends javax.swing.JFrame {
         model.addColumn("Date");
         model.addColumn("Poids souleves");
         model.addColumn("Nombre repetitions");
-        for (Performances performance : performancesCyclisme) {
+        for (Performances performance : performancesHal) {
             Object[] row = new Object[3];
             row[0] = performance.getDate();
             row[1] = ((Halterophilie) performance.getSport()).getPoidsLeve();
@@ -201,6 +201,10 @@ public class HalterophilieInterface extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
+        if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Verifier la saisie des donnees", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (jCalendar1.getDate().after(new Date())) {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
             return;
@@ -237,7 +241,7 @@ public class HalterophilieInterface extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
                 afficheTable();
                 return;
-            }else{
+            } else {
                 return;
             }
         }

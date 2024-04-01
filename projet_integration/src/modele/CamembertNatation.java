@@ -6,6 +6,7 @@
 package modele;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -92,10 +93,10 @@ public class CamembertNatation extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list, Date d) {
+    private void fillNatFriendsList(User user, JList<String> list, Date d) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user, d);
-        for (String friend : cyclistFriends) {
+        List<String> NatFriends = getNatFriends(user, d);
+        for (String friend : NatFriends) {
             model.addElement(friend);
         }
         list.setModel(model);
@@ -131,8 +132,8 @@ public class CamembertNatation extends JFrame {
         }
     }
 
-    private List<String> getCyclistFriends(User user, Date date) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getNatFriends(User user, Date date) {
+        List<String> natFriends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -147,7 +148,7 @@ public class CamembertNatation extends JFrame {
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
                         if (pratiqueNatation(u1) && hasPerformanceOnDate(u1, date)) {
-                            cyclistFriends.add(u1.getPseudo());
+                            natFriends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -159,7 +160,7 @@ public class CamembertNatation extends JFrame {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
                         if (u2 != null && pratiqueNatation(u2) && u2.getPseudo() != null && hasPerformanceOnDate(u2, date)) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                            natFriends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -173,7 +174,7 @@ public class CamembertNatation extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return natFriends;
     }
 
     private DefaultPieDataset createDataset2(User user1, User user2, Date d) {
@@ -257,7 +258,7 @@ public class CamembertNatation extends JFrame {
         this.d = d;
         JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox, d);
+        fillNatFriendsList(u, userComboBox, d);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
@@ -286,9 +287,9 @@ public class CamembertNatation extends JFrame {
                         Session session = DBConnection.getSession();
                         Transaction transaction = session.beginTransaction();
                         User user = (User) session.get(User.class, us.getId());
-                        DefaultPieDataset dataset2 = createDataset2(u, user, d); // Mettre à jour le dataset avec les deux utilisateurs
+                        DefaultPieDataset dataset2 = createDataset(u, d); // Mettre à jour le dataset avec les deux utilisateurs
                         JFreeChart chart1 = ChartFactory.createPieChart(
-                                "Performances Natation\t " + u.getPseudo() + " vs\t " + user.getPseudo(), // Titre du graphique
+                                "Performances Tennis\t " + u.getPseudo() + " " + d, // Titre du graphique
 
                                 dataset2, // Ensemble de données
                                 // Orientation du graphique (horizontal)
@@ -296,10 +297,24 @@ public class CamembertNatation extends JFrame {
                                 true, // Inclure les tooltips
                                 true // Inclure les URLs
                         );
+                        DefaultPieDataset dataset = createDataset(user, d); // Mettre à jour le dataset avec les deux utilisateurs
+                        JFreeChart chart12 = ChartFactory.createPieChart(
+                                "Performances Tennis\t " + user.getPseudo() + " " + d, // Titre du graphique
 
-                        ChartPanel chartPan = new ChartPanel(chart1);
+                                dataset, // Ensemble de données
+                                // Orientation du graphique (horizontal)
+                                true, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                                true, // Inclure les tooltips
+                                true // Inclure les URLs
+                        );
+
+                        ChartPanel chartPanel1 = new ChartPanel(chart1);
+                        ChartPanel chartPanel2 = new ChartPanel(chart12);
+
                         chartPanelContainer.removeAll();
-                        chartPanelContainer.add(chartPan, BorderLayout.CENTER);
+                        chartPanelContainer.setLayout(new GridLayout(2, 1));
+                        chartPanelContainer.add(chartPanel1);
+                        chartPanelContainer.add(chartPanel2);
                         chartPanelContainer.revalidate();
                         chartPanelContainer.repaint();
                     }

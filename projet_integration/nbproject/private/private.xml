@@ -3,13 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/RunningInterf.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/NatationInterface.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/HalterophilieInterface.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/TennisInterface.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/CyclismeInterf.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/Connexion.java</file>
-            <file>file:/C:/Users/Sabine/Desktop/projet_integration/src/vues/WindSurfInterface.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/NatationInterface.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/CyclismeInterf.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseCyclisme.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseWind.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/WindSurfInterface.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Connexion.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/RunningInterf.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/TennisInterface.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/HalterophilieInterface.java</file>
         </group>
     </open-files>
 </project-private>

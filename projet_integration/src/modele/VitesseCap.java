@@ -292,62 +292,7 @@ public class VitesseCap extends JFrame {
 
         JPanel buttonPanel = new JPanel(); // Création du panel pour le bouton de réinitialisation
         buttonPanel.add(resetButton); // Ajout du bouton de réinitialisation au panel
-        JButton calculateSpeedButton = new JButton("Calculer Vitesse"); // Création du bouton pour calculer la vitesse
-        calculateSpeedButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                // Récupérer les données de distance et de temps de chaque performance
-                // Calculer la vitesse (vitesse = distance / temps) pour chaque performance
-                // Mettre à jour le graphique avec les nouvelles données de vitesse
-                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                Session session = DBConnection.getSession();
-                Transaction transaction = session.beginTransaction();
 
-                try {
-                    User loadedUser = (User) session.get(User.class, u.getId());
-                    if (loadedUser != null) {
-                        List<Performances> performances = loadedUser.getPerformances();
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                        for (Performances p : performances) {
-                            double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
-                            double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
-                            double speed = distance / (temps * 0.0167);
-                            Date date = p.getDate();
-                            String formattedDate = dateFormat.format(date);
-                            dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
-                        }
-                    }
-
-                    transaction.commit();
-                } catch (Exception e) {
-                    transaction.rollback();
-                    e.printStackTrace();
-                } finally {
-                    session.close();
-                }
-
-                chartPanelContainer.removeAll();
-                JFreeChart chart = ChartFactory.createBarChart3D(
-                        "Vitesse de Course à pied", // Titre du graphique
-                        "Date", // Libellé de l'axe des catégories (horizontal)
-                        "Vitesse (km/h)", // Libellé de l'axe des valeurs (vertical)
-                        dataset, // Ensemble de données
-                        PlotOrientation.VERTICAL,// Orientation du graphique (vertical)
-                        true, // Inclure la légende
-                        true, // Inclure les tooltips
-                        false // Inclure les URLs
-                );
-                ChartPanel chartPanel = new ChartPanel(chart);
-                chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
-                chartPanelContainer.revalidate();
-                chartPanelContainer.repaint();
-            }
-        });
-
-// Création du panel pour le bouton de calcul de vitesse
-        JPanel calculateSpeedButtonPanel = new JPanel();
-        calculateSpeedButtonPanel.add(calculateSpeedButton);
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
@@ -362,7 +307,6 @@ public class VitesseCap extends JFrame {
         add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
-        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.SOUTH);// Ajout du panel de bouton au nord de la fenêtre
     }
 
     public static void main(String[] args) {

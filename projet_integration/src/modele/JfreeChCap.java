@@ -28,8 +28,12 @@ import org.hibernate.Transaction;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -85,17 +89,17 @@ public class JfreeChCap extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list) {
+    private void fillCapFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user);
-        for (String friend : cyclistFriends) {
+        List<String> Friends = getCapFriends(user);
+        for (String friend : Friends) {
             model.addElement(friend);
         }
         list.setModel(model);
     }
 
-    private List<String> getCyclistFriends(User user) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getCapFriends(User user) {
+        List<String> Friends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -109,8 +113,8 @@ public class JfreeChCap extends JFrame {
                         User demandeur = demande.getDemandeur();
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-                            cyclistFriends.add(u1.getPseudo());
+                        if (pratiqueCap(u1)) {
+                            Friends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -121,8 +125,8 @@ public class JfreeChCap extends JFrame {
                     if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                        if (u2 != null && pratiqueCap(u2) && u2.getPseudo() != null) {
+                            Friends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -136,11 +140,11 @@ public class JfreeChCap extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return Friends;
     }
 
-    private DefaultCategoryDataset createDataset2(User user1, User user2) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private XYSeriesCollection createDataset2(User user1, User user2) {
+        XYSeriesCollection dataset = new XYSeriesCollection();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
 
@@ -152,31 +156,25 @@ public class JfreeChCap extends JFrame {
                 List<Performances> performancesUser1 = loadedUser1.getPerformances();
                 List<Performances> performancesUser2 = loadedUser2.getPerformances();
 
-                List<Performances> mergedPerformances = new ArrayList<>();
-                mergedPerformances.addAll(performancesUser1);
-                mergedPerformances.addAll(performancesUser2);
+                XYSeries seriesUser1 = new XYSeries(user1.getPseudo());
+                XYSeries seriesUser2 = new XYSeries(user2.getPseudo());
 
-                Collections.sort(mergedPerformances, new Comparator<Performances>() {
-                    @Override
-                    public int compare(Performances p1, Performances p2) {
-                        return p1.getDate().compareTo(p2.getDate());
-                    }
-                });
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                for (Performances p : mergedPerformances) {
+                for (Performances p : performancesUser1) {
                     if (p.getSport().estCap()) {
                         double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
-                        Date date = p.getDate();
-                        String formattedDate = dateFormat.format(date);
-                        if (performancesUser1.contains(p)) {
-                            dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                        } else if (performancesUser2.contains(p)) {
-                            dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                        }
+                        seriesUser1.add(p.getDate().getTime(), value);
                     }
                 }
+
+                for (Performances p : performancesUser2) {
+                    if (p.getSport().estCap()) {
+                        double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
+                        seriesUser2.add(p.getDate().getTime(), value);
+                    }
+                }
+
+                dataset.addSeries(seriesUser1);
+                dataset.addSeries(seriesUser2);
             }
 
             transaction.commit();
@@ -190,50 +188,7 @@ public class JfreeChCap extends JFrame {
         return dataset;
     }
 
-    private void fillComboBox(User user, JList<String> userComboBox1) {
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        User us = (User) session.get(User.class, user.getId());
-        try {
-            List<DemandeAmi> demandesRecues = us.getDemandesRecues();
-            List<DemandeAmi> demandesEnvoyees = us.getDemandesEnvoyees();
-
-            if (demandesRecues != null) {
-                for (DemandeAmi demande : demandesRecues) {
-                    if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
-                        User demandeur = demande.getDemandeur();
-                        User u1 = (User) session.get(User.class, demandeur.getId());
-                        System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-//                        userComboBox.addItem(u1.getPseudo());
-                        }
-                    }
-                }
-            }
-
-            if (demandesEnvoyees != null) {
-                for (DemandeAmi demande : demandesEnvoyees) {
-                    if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
-
-                        User destinataire = demande.getDestinataire();
-                        User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-//                        userComboBox.addItem(destinataire.getPseudo());
-                        }
-                    }
-                }
-            }
-
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    private boolean pratiqueCyclisme(User user) {
+    private boolean pratiqueCap(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estCap()) {
@@ -254,7 +209,7 @@ public class JfreeChCap extends JFrame {
         this.isDistance = isDistance;
         JLabel userLabel = new JLabel("Comparez avec vote ami"); // Création du JLabel
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox);
+        fillCapFriendsList(u, userComboBox);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
@@ -290,8 +245,11 @@ public class JfreeChCap extends JFrame {
                         Session session = DBConnection.getSession();
                         Transaction transaction = session.beginTransaction();
                         User user = (User) session.get(User.class, us.getId());
-                        DefaultCategoryDataset dataset2 = createDataset2(u, user); // Mettre à jour le dataset avec les deux utilisateurs
-                        JFreeChart chart1 = ChartFactory.createLineChart("Performances Course a pied", // Titre du graphique
+
+                        // Ajouter les données du deuxième utilisateur
+                        XYSeriesCollection dataset2 = createDataset2(u, user);
+                        // Mettre à jour le dataset avec les deux utilisateurs
+                        JFreeChart chart1 = ChartFactory.createXYLineChart("Performances Course a pied", // Titre du graphique
                                 "Date", // Libellé de l'axe des catégories (horizontal)
                                 isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                                 dataset2, // Ensemble de données
@@ -300,7 +258,12 @@ public class JfreeChCap extends JFrame {
                                 true, // Inclure les tooltips
                                 true // Inclure les URLs
                         );
+                        XYPlot plot = (XYPlot) chart1.getPlot();
 
+// Configurer l'axe X pour afficher les dates au format jour-mois-année
+                        DateAxis xAxis = new DateAxis("Date");
+                        xAxis.setDateFormatOverride(new SimpleDateFormat("dd-MM-yyyy"));
+                        plot.setDomainAxis(xAxis);
                         ChartPanel chartPan = new ChartPanel(chart1);
                         chartPanelContainer.removeAll();
                         chartPanelContainer.add(chartPan, BorderLayout.CENTER);
@@ -317,7 +280,7 @@ public class JfreeChCap extends JFrame {
                 // Recréer le graphique initial
                 DefaultCategoryDataset initialDataset = createDataset(u);
                 JFreeChart initialChart = ChartFactory.createLineChart(
-                        "Performances Cyclisme", // Titre du graphique
+                        "Performances Course a pied", // Titre du graphique
                         "Date", // Libellé de l'axe des catégories (horizontal)
                         isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                         initialDataset, // Ensemble de données initial
