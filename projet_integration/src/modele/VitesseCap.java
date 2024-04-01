@@ -35,6 +35,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre d'affichage des performances de vitesse pour la pratique du sport "course à pied".
+ * Elle hérite de la classe JFrame.
+ */
 public class VitesseCap extends JFrame {
 
     private JList<String> userComboBox;
@@ -82,6 +86,12 @@ public class VitesseCap extends JFrame {
         return dataset;
     }
 
+    /**
+     * Remplit une liste avec les amis d'un utilisateur pratiquant la course à pied.
+     * 
+     * @param user l'utilisateur dont on souhaite récupérer les amis qui pratiquent la course à pied
+     * @param list la liste à remplir avec les amis qui pratique la course à pied
+     */
     private void fillCapFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
         List<String> capFriends = getCapFriends(user);
@@ -91,6 +101,12 @@ public class VitesseCap extends JFrame {
         list.setModel(model);
     }
 
+    /**
+     * Vérifie si l'utilisateur pratique la course à pied.
+     * 
+     * @param user L'utilisateur pour lequel on vérifie les sports pratiqués.
+     * @return true si l'utilisateur pratique la course à pied, sinon false.
+     */
     private boolean pratiqueCap(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
@@ -205,7 +221,7 @@ public class VitesseCap extends JFrame {
     }
 
     public VitesseCap(final User u) {
-        setTitle("Performances Cyclisme");
+        setTitle("Performances Course a pied");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
@@ -245,7 +261,7 @@ public class VitesseCap extends JFrame {
                         Transaction transaction = session.beginTransaction();
                         User user = (User) session.get(User.class, us.getId());
                         DefaultCategoryDataset dataset2 = createDataset2(u, user); // Mettre à jour le dataset avec les deux utilisateurs
-                        JFreeChart chart1 = ChartFactory.createLineChart3D("Performances Cyclisme", // Titre du graphique
+                        JFreeChart chart1 = ChartFactory.createLineChart3D("Performances Course a pied", // Titre du graphique
                                 "Date", // Libellé de l'axe des catégories (horizontal)
                                 "Vitesse", // Libellé de l'axe des valeurs (vertical)
                                 dataset2, // Ensemble de données
@@ -271,7 +287,7 @@ public class VitesseCap extends JFrame {
                 // Recréer le graphique initial
                 DefaultCategoryDataset initialDataset = createDataset(u);
                 JFreeChart initialChart = ChartFactory.createLineChart3D(
-                        "Performances Cyclisme", // Titre du graphique
+                        "Performance course à pied", // Titre du graphique
                         "Date", // Libellé de l'axe des catégories (horizontal)
                         "Vitesse", // Libellé de l'axe des valeurs (vertical)
                         initialDataset, // Ensemble de données initial

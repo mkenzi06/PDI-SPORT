@@ -7,7 +7,7 @@ package modele;
 import javax.persistence.*;
 /**
  *
- * @author HP
+ * @author kenzi
  */
 @Entity
 public class Cyclisme extends Sport {

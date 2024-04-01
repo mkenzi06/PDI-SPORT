@@ -36,7 +36,11 @@ import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
- * @author HP
+ * @author kenzi
+ */
+/**
+ * Cette classe représente un graphique camembert pour les performances de natation.
+ * Elle hérite de la classe JFrame.
  */
 public class CamembertNatation extends JFrame {
 
@@ -93,6 +97,13 @@ public class CamembertNatation extends JFrame {
         return dataset;
     }
 
+    /**
+     * Cette méthode remplit la liste des amis pratiquant la natation pour un utilisateur donné à une date spécifiée.
+     * 
+     * @param user L'utilisateur pour lequel remplir la liste des amis pratiquant la natation
+     * @param list La liste dans laquelle ajouter les amis pratiquant la natation
+     * @param d La date spécifiée
+     */
     private void fillNatFriendsList(User user, JList<String> list, Date d) {
         DefaultListModel<String> model = new DefaultListModel<>();
         List<String> NatFriends = getNatFriends(user, d);
@@ -102,8 +113,13 @@ public class CamembertNatation extends JFrame {
         list.setModel(model);
     }
 
+    /**
+     * Cette méthode vérifie si un utilisateur pratique la natation.
+     * 
+     * @param user L'utilisateur à vérifier
+     * @return true si l'utilisateur pratique la natation, sinon false
+     */
     private boolean pratiqueNatation(User user) {
-
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estNatation()) {
                 return true;
@@ -112,6 +128,13 @@ public class CamembertNatation extends JFrame {
         return false;
     }
 
+    /**
+     * Cette méthode vérifie si un utilisateur a une performance de natation à une date donnée.
+     * 
+     * @param user L'utilisateur à vérifier
+     * @param date La date spécifiée
+     * @return true si l'utilisateur a une performance de natation à la date donnée, sinon false
+     */
     private boolean hasPerformanceOnDate(User user, Date date) {
         Session session = DBConnection.getSession();
         try {
@@ -132,6 +155,13 @@ public class CamembertNatation extends JFrame {
         }
     }
 
+    /**
+     * Cette méthode récupère la liste des amis pratiquant la natation pour un utilisateur donné à une date spécifiée.
+     * 
+     * @param user L'utilisateur pour lequel récupérer la liste des amis pratiquant la natation
+     * @param date La date spécifiée
+     * @return La liste des amis pratiquant la natation pour l'utilisateur donné à la date spécifiée
+     */
     private List<String> getNatFriends(User user, Date date) {
         List<String> natFriends = new ArrayList<>();
         Session session = DBConnection.getSession();
@@ -249,6 +279,12 @@ public class CamembertNatation extends JFrame {
 
     }
 
+    /**
+     * Construit une fenêtre affichant les performances de natation d'un utilisateur donné.
+     * 
+     * @param u L'utilisateur pour lequel afficher les performances de natation.
+     * @param d La date des performances à afficher.
+     */
     public CamembertNatation(final User u, final Date d) {
         setTitle("Performances Natation");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

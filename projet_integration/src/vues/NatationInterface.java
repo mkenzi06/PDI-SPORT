@@ -20,6 +20,11 @@ import org.hibernate.Transaction;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique de la Natation.
+ * Elle affiche les performances de l'utilisateur liées à la natation dans un tableau.
+ * L'utilisateur peut également enregistrer de nouvelles performances et consulter les types de nages pour une journée sélectionnée.
+ */
 public class NatationInterface extends javax.swing.JFrame {
 
     private User u;

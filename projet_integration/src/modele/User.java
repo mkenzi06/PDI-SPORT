@@ -17,6 +17,9 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author HP
  */
+/**
+ * Cette classe représente un utilisateur.
+ */
 @Entity
 public class User {
 

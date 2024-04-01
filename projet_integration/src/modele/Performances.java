@@ -10,6 +10,9 @@ import javax.persistence.*;
  *
  * @author HP
  */
+/**
+ * Cette classe représente les performances d'un utilisateur dans un sport donné à une date spécifique.
+ */
 @Entity
 public class Performances {
     @Id

@@ -33,7 +33,11 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
- * @author HP
+ * @author kenzi
+ */
+/**
+ * Cette classe représente une fenêtre JFrame pour afficher les performances d'haltérophilie.
+ * Elle utilise la bibliothèque JFreeChart pour générer des graphiques à partir des données de performances.
  */
 public class JfreeChHalterophilie extends JFrame {
 

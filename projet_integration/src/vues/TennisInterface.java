@@ -27,6 +27,10 @@ import modele.Tennis;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique du Tennis.
+ * Elle étend la classe javax.swing.JFrame et affiche les performances de l'utilisateur dans un tableau.
+ */
 public class TennisInterface extends javax.swing.JFrame {
 
     /**

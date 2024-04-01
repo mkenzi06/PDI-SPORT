@@ -27,6 +27,10 @@ import org.hibernate.Transaction;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique du Cyclisme.
+ * Elle permet à l'utilisateur de consulter et d'enregistrer ses performances de cyclisme.
+ */
 public class CyclismeInterf extends javax.swing.JFrame {
 
     private User u;
@@ -47,6 +51,12 @@ public class CyclismeInterf extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Affiche les performances spécifiques au cyclisme dans un tableau.
+     * Les performances sont récupérées à partir de l'utilisateur actuel.
+     * Seules les performances liées au cyclisme sont affichées.
+     * Le tableau affiche la date, la distance parcourue et le temps de chaque performance.
+     */
     private void afficheTable() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -215,6 +225,12 @@ public class CyclismeInterf extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dparcourActionPerformed
 
+    /**
+     * Méthode appelée lorsqu'un événement d'action se produit sur le bouton jButton1.
+     * Cette méthode gère l'ajout ou la modification d'une performance de cyclisme.
+     * 
+     * @param evt L'événement d'action qui a déclenché l'appel à cette méthode.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();

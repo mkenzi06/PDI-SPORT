@@ -28,6 +28,10 @@ import modele.VitesseWind;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique du WindSurf.
+ * Elle hérite de la classe javax.swing.JFrame affiche les performances de l'utilisateur dans un tableau.
+ */
 public class WindSurfInterface extends javax.swing.JFrame {
 
     private User u;

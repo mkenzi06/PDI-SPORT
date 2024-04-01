@@ -22,6 +22,11 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author HP
  */
+/**
+ * Cette classe représente la fenêtre d'ajout d'amis.
+ * Elle affiche une liste d'utilisateurs ayant des intérêts sportifs similaires à l'utilisateur connecté.
+ * L'utilisateur peut sélectionner un utilisateur de la liste pour l'ajouter en tant qu'ami.
+ */
 public class AjoutAmi extends javax.swing.JFrame {
 
     User u;
@@ -30,6 +35,12 @@ public class AjoutAmi extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Récupère la liste des identifiants des utilisateurs ayant une demande d'ami en attente pour un utilisateur donné.
+     *
+     * @param utilisateur L'utilisateur pour lequel on souhaite récupérer les identifiants des utilisateurs ayant une demande d'ami en attente.
+     * @return La liste des identifiants des utilisateurs ayant une demande d'ami en attente pour l'utilisateur donné.
+     */
     private List<Long> getUtilisateurIdsAvecDemandeAmiEnAttente(User utilisateur) {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -42,6 +53,12 @@ public class AjoutAmi extends javax.swing.JFrame {
     }
 
 // Méthode pour récupérer les IDs des utilisateurs avec demande d'ami acceptée
+    /**
+     * Cette méthode retourne une liste d'identifiants d'utilisateurs ayant une demande d'ami acceptée.
+     * 
+     * @param utilisateur L'utilisateur pour lequel on souhaite obtenir les identifiants des utilisateurs ayant accepté sa demande d'ami.
+     * @return Une liste d'identifiants d'utilisateurs ayant accepté la demande d'ami de l'utilisateur spécifié.
+     */
     private List<Long> getUtilisateurIdsAvecDemandeAmiAcceptee(User utilisateur) {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -53,6 +70,13 @@ public class AjoutAmi extends javax.swing.JFrame {
         return criteria.list();
     }
 
+    /**
+     * Cette méthode retourne une liste d'identifiants d'utilisateurs ayant une demande d'ami en attente
+     * pour un utilisateur donné.
+     *
+     * @param utilisateur L'utilisateur pour lequel on souhaite récupérer les identifiants des utilisateurs avec une demande d'ami en attente.
+     * @return Une liste d'identifiants d'utilisateurs ayant une demande d'ami en attente.
+     */
     private List<Long> getUtilisateurIdsAvecDemandeAmiEnAttente1(User utilisateur) {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -72,9 +96,12 @@ public class AjoutAmi extends javax.swing.JFrame {
 
         return ids;
     }
-private void actualiser(){
-    
-}
+
+    /**
+     * Affiche les utilisateurs qui pratiquent le même sport que l'utilisateur actuel.
+     * Les utilisateurs sont affichés dans un tableau avec leurs pseudonymes et les sports en commun.
+     * Les utilisateurs avec une demande d'ami en attente ne sont pas inclus dans les résultats.
+     */
     private void afficherUtilisateursMemeSport() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -222,6 +249,12 @@ private void actualiser(){
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Méthode appelée lorsqu'un clic de souris est effectué sur la jTable2.
+     * Elle permet d'envoyer une invitation à un utilisateur sélectionné dans la table.
+     * 
+     * @param evt L'événement de la souris qui a déclenché l'appel à la méthode.
+     */
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         int ro = jTable2.getSelectedRow();
         if (ro >= 0) {

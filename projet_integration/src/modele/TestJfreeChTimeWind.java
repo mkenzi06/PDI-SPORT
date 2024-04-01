@@ -35,6 +35,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre de test pour afficher les performances de windsurf.
+ * Elle hérite de la classe JFrame.
+ */
 public class TestJfreeChTimeWind extends JFrame {
 
     private JList<String> userComboBox;

@@ -35,6 +35,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre affichant les performances de cyclisme.
+ * Elle hérite de la classe JFrame.
+ */
 public class VitesseCyclisme extends JFrame {
 
     private JList<String> userComboBox;

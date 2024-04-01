@@ -32,7 +32,11 @@ import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
- * @author HP
+ * @author kenzi
+ */
+/**
+ * Cette classe représente une fenêtre affichant un camembert de performances de tennis.
+ * Elle hérite de la classe JFrame.
  */
 public class CamembertTennis extends JFrame {
 
@@ -88,6 +92,13 @@ public class CamembertTennis extends JFrame {
         return dataset;
     }
 
+    /**
+     * Remplit une liste avec les amis de tennis d'un utilisateur qui a une performance à une date donnée.
+     * 
+     * @param user l'utilisateur pour lequel on souhaite récupérer les amis de tennis
+     * @param list la liste dans laquelle les amis de tennis seront affichés
+     * @param d la date à laquelle on souhaite récupérer les amis de tennis
+     */
     private void filltennisFriendsList(User user, JList<String> list, Date d) {
         DefaultListModel<String> model = new DefaultListModel<>();
         List<String> Friends = getTennisFriends(user, d);
@@ -97,6 +108,12 @@ public class CamembertTennis extends JFrame {
         list.setModel(model);
     }
 
+    /**
+     * Vérifie si l'utilisateur pratique le tennis.
+     * 
+     * @param user L'utilisateur pour lequel on vérifie la pratique du tennis.
+     * @return true si l'utilisateur pratique le tennis, sinon false.
+     */
     private boolean pratiqueTennis(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
@@ -107,6 +124,13 @@ public class CamembertTennis extends JFrame {
         return false;
     }
 
+    /**
+     * Vérifie si un utilisateur a une performance de tennis à une date donnée.
+     * 
+     * @param user l'utilisateur pour lequel on vérifie les performances
+     * @param date la date à laquelle on vérifie les performances
+     * @return true si l'utilisateur a une performance de tennis à la date donnée, false sinon
+     */
     private boolean hasPerformanceOnDate(User user, Date date) {
         Session session = DBConnection.getSession();
         try {
@@ -127,6 +151,13 @@ public class CamembertTennis extends JFrame {
         }
     }
 
+    /**
+     * Récupère la liste des amis de tennis d'un utilisateur qui ont une performance pour une date donnée.
+     * 
+     * @param user L'utilisateur pour lequel on souhaite récupérer les amis de tennis.
+     * @param date La date à laquelle on souhaite vérifier la performance des amis.
+     * @return Une liste contenant les pseudonymes des amis de tennis de l'utilisateur.
+     */
     private List<String> getTennisFriends(User user, Date date) {
         List<String> Friends = new ArrayList<>();
         Session session = DBConnection.getSession();
@@ -244,6 +275,14 @@ public class CamembertTennis extends JFrame {
 
     }
 
+    /**
+     * Cette classe représente une fenêtre affichant les performances de tennis d'un utilisateur.
+     * Elle permet de comparer les performances de l'utilisateur avec celles d'un ami sélectionné.
+     * La fenêtre affiche un graphique en camembert pour visualiser les performances.
+     * 
+     * @param u L'utilisateur dont les performances de tennis sont affichées.
+     * @param d La date des performances de tennis à afficher.
+     */
     public CamembertTennis(final User u, final Date d) {
         setTitle("Performances Natation");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -27,6 +27,10 @@ import org.hibernate.Transaction;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique de l'Halterophilie.
+ * Elle étend la classe javax.swing.JFrame et affiche les performances d'un utilisateur dans le domaine de l'haltérophilie.
+ */
 public class HalterophilieInterface extends javax.swing.JFrame {
 
     private User u;

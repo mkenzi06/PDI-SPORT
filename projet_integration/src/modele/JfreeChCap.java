@@ -39,6 +39,11 @@ import org.jfree.data.xy.XYSeriesCollection;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre affichant les performances de course à pied.
+ * Elle permet de comparer les performances d'un utilisateur avec celles de ses amis pratiquant la course à pied.
+ * Les performances sont affichées sous forme de graphiques.
+ */
 public class JfreeChCap extends JFrame {
 
     private JList<String> userComboBox;
@@ -49,6 +54,12 @@ public class JfreeChCap extends JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Crée un ensemble de données de catégorie par défaut pour un graphique à lignes.
+     * 
+     * @param selectedUser l'utilisateur sélectionné
+     * @return un objet DefaultCategoryDataset contenant les données du graphique
+     */
     private DefaultCategoryDataset createDataset(User selectedUser) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         Session session = DBConnection.getSession();
@@ -89,6 +100,12 @@ public class JfreeChCap extends JFrame {
         return dataset;
     }
 
+    /**
+     * Remplit une liste avec les amis d'un utilisateur.
+     * 
+     * @param user l'utilisateur dont on veut récupérer les amis
+     * @param list la liste dans laquelle les amis seront affichés
+     */
     private void fillCapFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
         List<String> Friends = getCapFriends(user);
@@ -98,6 +115,12 @@ public class JfreeChCap extends JFrame {
         list.setModel(model);
     }
 
+    /**
+     * Cette méthode retourne une liste des amis qui pratiquent la course à pied d'un utilisateur donné.
+     * 
+     * @param user L'utilisateur pour lequel on souhaite obtenir la liste des amis pratiquant la course à pied.
+     * @return Une liste des pseudonymes des amis pratiquant la course à pied de l'utilisateur donné.
+     */
     private List<String> getCapFriends(User user) {
         List<String> Friends = new ArrayList<>();
         Session session = DBConnection.getSession();
@@ -188,6 +211,12 @@ public class JfreeChCap extends JFrame {
         return dataset;
     }
 
+    /**
+     * Vérifie si l'utilisateur pratique la course à pied.
+     * 
+     * @param user L'utilisateur dont on vérifie les sports pratiqués.
+     * @return true si l'utilisateur pratique la course à pied, sinon false.
+     */
     private boolean pratiqueCap(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
@@ -200,6 +229,18 @@ public class JfreeChCap extends JFrame {
 
     private User u;
 
+    /**
+     * Cette classe représente une fenêtre affichant les performances de la course à pied.
+     * Elle hérite de la classe JFrame.
+     * 
+     * La fenêtre affiche un graphique des performances de l'utilisateur courant, ainsi qu'un menu déroulant permettant de comparer les performances avec un ami.
+     * L'utilisateur peut réinitialiser le graphique et sélectionner un autre ami pour comparer les performances.
+     * 
+     * Pour afficher le graphique, cette classe utilise la bibliothèque JFreeChart.
+     * 
+     * @param u L'utilisateur courant
+     * @param isDistance Un indicateur indiquant si les performances sont mesurées en distance parcourue (true) ou en temps de performance (false)
+     */
     public JfreeChCap(final User u, final boolean isDistance) {
         setTitle("Performances Course à pied");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

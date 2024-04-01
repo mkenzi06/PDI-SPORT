@@ -23,6 +23,10 @@ import modele.*;
  *
  * @author HP
  */
+/**
+ * Cette classe représente l'interface graphique de la fenêtre de la course à pied.
+ * Elle affiche les performances de l'utilisateur liées à la course à pied.
+ */
 public class RunningInterf extends javax.swing.JFrame {
 
     /**
@@ -184,7 +188,7 @@ public class RunningInterf extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButton2.setText("Visualiser la distance en fonction des jours");
+        jButton2.setText("Visualiser la distance en fonction des jours.");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

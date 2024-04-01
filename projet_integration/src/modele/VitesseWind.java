@@ -35,6 +35,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre d'affichage des performances de windsurf.
+ * Elle hérite de la classe JFrame.
+ */
 public class VitesseWind extends JFrame {
 
     private JList<String> userComboBox;

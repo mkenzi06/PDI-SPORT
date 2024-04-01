@@ -29,6 +29,10 @@ import org.hibernate.Transaction;
  *
  * @author HP
  */
+/**
+ * Cette classe représente la fenêtre de modification des sports d'un utilisateur.
+ * Elle permet à l'utilisateur de modifier ses informations personnelles ainsi que les sports qu'il pratique.
+ */
 public class ModifSport extends javax.swing.JFrame {
 
     /**
@@ -59,6 +63,11 @@ public class ModifSport extends javax.swing.JFrame {
         s.close();
     }
 
+    /**
+     * Vérifie si le nombre de sports sélectionnés dépasse la limite autorisée.
+     * 
+     * @return true si le nombre de sports sélectionnés dépasse la limite autorisée, sinon false.
+     */
     private boolean aTropDeSports() {
         return jList1.getModel().getSize() >= 3;
     }
@@ -69,10 +78,17 @@ public class ModifSport extends javax.swing.JFrame {
     }
 
 // Méthode pour activer ou désactiver le bouton "Ajouter" en fonction de la sélection d'un sport dans la jList2
+    /**
+     * Met à jour l'état du bouton "Ajouter" en fonction de la sélection dans la liste jList2.
+     * Le bouton sera activé si un élément est sélectionné dans la liste jList2 et si le nombre de sports ajoutés n'a pas atteint la limite.
+     */
     private void updateBtnAjouterStateJList2() {
         btnAjouter.setEnabled(jList2.getSelectedIndex() != -1 && !aTropDeSports());
     }
 
+    /**
+     * Charge les sports disponibles dans une liste.
+     */
     private void chargerSportsDisponibles() {
         DefaultListModel<String> model = new DefaultListModel<>();
         for (String sport : sportsDisponibles) {
@@ -81,6 +97,11 @@ public class ModifSport extends javax.swing.JFrame {
         jList2.setModel(model);
     }
 
+    /**
+     * Enregistre un utilisateur dans la base de données.
+     * 
+     * @param user L'utilisateur à enregistrer.
+     */
     private void saveUser(User user) {
         Session s = DBConnection.getSession();
         Transaction t = s.beginTransaction();
@@ -89,6 +110,9 @@ public class ModifSport extends javax.swing.JFrame {
         s.close();
     }
 
+    /**
+     * Affiche les sports pratiqués par l'utilisateur dans une liste.
+     */
     private void afficheSport() {
         Session s = DBConnection.getSession();
         Transaction t = s.beginTransaction();
@@ -243,6 +267,17 @@ public class ModifSport extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Méthode appelée lorsqu'on clique sur le bouton "Ajouter".
+     * Elle récupère le sport sélectionné dans la liste jList2 et l'ajoute à la liste jList1.
+     * Si le sport sélectionné n'est pas déjà présent dans la liste jList1 et que l'utilisateur n'a pas déjà choisi trois sports,
+     * alors le sport est ajouté à la liste jList1 et à la liste des sports de l'utilisateur.
+     * Ensuite, l'état du bouton "Ajouter" est mis à jour en fonction de la liste jList1.
+     * Si l'utilisateur a déjà choisi trois sports, un message d'erreur est affiché.
+     * Si le sport sélectionné est déjà présent dans la liste jList1, un message d'erreur est affiché.
+     *
+     * @param evt L'événement de l'action du bouton "Ajouter"
+     */
     private void btnAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterActionPerformed
 
         String sportChoisi = jList2.getSelectedValue();
@@ -262,6 +297,12 @@ public class ModifSport extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAjouterActionPerformed
 
+    /**
+     * Méthode appelée lorsqu'un événement d'action se produit sur le bouton jButton2.
+     * Supprime le sport sélectionné de la JList et de la base de données, puis met à jour l'état du bouton "Ajouter".
+     * 
+     * @param evt L'événement d'action associé au bouton jButton2
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String sportASupprimer = jList1.getSelectedValue();
         if (sportASupprimer != null && !sportASupprimer.isEmpty()) {
@@ -280,11 +321,27 @@ public class ModifSport extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tpseudoActionPerformed
 
+    /**
+     * Méthode appelée lorsqu'un événement d'action est déclenché par le bouton jButton1.
+     * Cette méthode met à jour les données de l'utilisateur en fonction des champs de texte tnom, tprenom et tpseudo.
+     * Si au moins un des champs n'est pas vide, la méthode effectue les opérations suivantes :
+     * 1. Récupère une session de connexion à la base de données.
+     * 2. Démarre une transaction.
+     * 3. Récupère l'utilisateur correspondant à l'identifiant u.getId() depuis la base de données.
+     * 4. Vérifie si le champ tpseudo est différent du pseudo actuel de l'utilisateur.
+     *    Si c'est le cas, vérifie si le nouveau pseudo existe déjà dans la base de données.
+     *    Si le pseudo existe déjà, affiche un message d'erreur et arrête l'exécution de la méthode.
+     * 5. Met à jour les attributs nom, prenom et pseudo de l'utilisateur avec les valeurs des champs de texte.
+     * 6. Effectue la mise à jour de l'utilisateur dans la base de données.
+     * 7. Valide la transaction.
+     * 8. Affiche un message de succès.
+     * 9. Appelle la méthode initData pour mettre à jour les données de l'utilisateur affichées à l'écran.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User utilisateur = (User) session.get(User.class, u.getId());
-        if (!tnom.getText().isEmpty() || !tprenom.getText().isEmpty() || !tpseudo.getText().isEmpty()) {
+        if (!tnom.getText().isEmpty() && !tprenom.getText().isEmpty() && !tpseudo.getText().isEmpty()) {
             String pseudoUtilisateurCourant = utilisateur.getPseudo();
 
             if (!tpseudo.getText().equals(pseudoUtilisateurCourant)) {
@@ -305,10 +362,20 @@ public class ModifSport extends javax.swing.JFrame {
             transaction.commit();
             JOptionPane.showMessageDialog(this, "Données de l'utilisateur mises à jour avec succès !");
             initData(utilisateur);
+        }else { JOptionPane.showMessageDialog(this, "Erreur lors de la saisie des données !");
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Méthode exécutée lors du clic sur le bouton jButton3.
+     * Elle récupère une session de connexion à la base de données, démarre une transaction,
+     * récupère l'utilisateur correspondant à l'identifiant u.getId() depuis la session,
+     * crée une instance de la classe Profil en lui passant l'utilisateur en paramètre,
+     * affiche la fenêtre Profil et ferme la fenêtre actuelle.
+     *
+     * @param evt L'événement de clic sur le bouton
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -360,6 +427,11 @@ public class ModifSport extends javax.swing.JFrame {
 //        }
 //    }
 
+    /**
+     * Supprime un sport de la liste des sports pratiqués par l'utilisateur.
+     * 
+     * @param sportASupprimer Le nom du sport à supprimer.
+     */
     private void supprimerSportUtilisateur(String sportASupprimer) {
         Session session = null;
         try {
@@ -422,6 +494,11 @@ public class ModifSport extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Ajoute un sport à l'utilisateur.
+     * 
+     * @param sportChoisi Le sport choisi par l'utilisateur.
+     */
     private void ajouterSportUtilisateur(String sportChoisi) {
         Session session = null;
         try {

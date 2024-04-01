@@ -9,6 +9,11 @@ import javax.persistence.*;
  *
  * @author HP
  */
+/**
+ * Cette classe représente un sport de course à pied.
+ * Elle hérite de la classe Sport.
+ */
+
 @Entity
 public class CourseAPied extends Sport {
     private double distanceParcourue;
@@ -18,79 +23,101 @@ public class CourseAPied extends Sport {
     // Constructeur, getters and setters
 
     /**
-     * @return the distanceParcourue
+     * Cette classe représente un sport de course à pied.
+     * Elle hérite de la classe Sport.
+     */
+    
+    /**
+     * Retourne la distance parcourue lors de la course à pied.
+     *
+     * @return la distance parcourue
      */
     public double getDistanceParcourue() {
         return distanceParcourue;
     }
 
     /**
-     * @param distanceParcourue the distanceParcourue to set
+     * Définit la distance parcourue lors de la course à pied.
+     *
+     * @param distanceParcourue la distance parcourue
      */
     public void setDistanceParcourue(double distanceParcourue) {
         this.distanceParcourue = distanceParcourue;
     }
 
     /**
-     * @return the tempsPerformance
+     * Retourne le temps de performance lors de la course à pied.
+     *
+     * @return le temps de performance
      */
     public double getTempsPerformance() {
         return tempsPerformance;
     }
 
     /**
-     * @param tempsPerformance the tempsPerformance to set
+     * Définit le temps de performance lors de la course à pied.
+     *
+     * @param tempsPerformance le temps de performance
      */
     public void setTempsPerformance(double tempsPerformance) {
         this.tempsPerformance = tempsPerformance;
     }
 
     /**
-     * @return the nombreSeancesEntrainement
+     * Retourne le nombre de séances d'entraînement effectuées pour la course à pied.
+     *
+     * @return le nombre de séances d'entraînement
      */
     public int getNombreSeancesEntrainement() {
         return nombreSeancesEntrainement;
     }
 
     /**
-     * @param nombreSeancesEntrainement the nombreSeancesEntrainement to set
+     * Définit le nombre de séances d'entraînement effectuées pour la course à pied.
+     *
+     * @param nombreSeancesEntrainement le nombre de séances d'entraînement
      */
     public void setNombreSeancesEntrainement(int nombreSeancesEntrainement) {
         this.nombreSeancesEntrainement = nombreSeancesEntrainement;
     }
     
+    /**
+     * Cette méthode retourne le nom du sport.
+     *
+     * @return le nom du sport
+     */
     @Override
-    
-       public String getNom() {
+    public String getNom() {
         return "Course a pied";
     }
+
     @Override
     public boolean estCyclisme() {
-        return false; //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean estTennis() {
-        return false; //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean estWindsurf() {
-       return false;//To change body of generated methods, choose Tools | Templates.
+       return false;
     }
 
     @Override
     public boolean estHalterophilie() {
-       return false; //To change body of generated methods, choose Tools | Templates.
+       return false;
     }
 
     @Override
     public boolean estNatation() {
-        return false; //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean estCap() {
-        return true; //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 }

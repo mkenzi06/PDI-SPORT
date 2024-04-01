@@ -17,6 +17,10 @@ import vues.Profil;
  *
  * @author Sabine
  */
+/**
+ * Cette classe représente la fenêtre de connexion de l'application.
+ * Elle hérite de la classe javax.swing.JFrame.
+ */
 public class Connexion extends javax.swing.JFrame {
 
     /**
@@ -182,6 +186,16 @@ public class Connexion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    /**
+     * Méthode exécutée lorsqu'un événement d'action est déclenché par le bouton de connexion.
+     * Vérifie si les champs "pseudo" et "mdp" sont vides. Si l'un des champs est vide, affiche un message d'erreur.
+     * Sinon, tente de récupérer un utilisateur correspondant au pseudo et mot de passe saisis.
+     * Si un utilisateur est trouvé, affiche un message de bienvenue avec le prénom de l'utilisateur,
+     * ouvre la fenêtre du profil utilisateur et ferme la fenêtre de connexion.
+     * Sinon, affiche un message d'erreur indiquant que le pseudo ou le mot de passe est inexistant,
+     * vide les champs "pseudo" et "mdp".
+     * Effectue une transaction de base de données et ferme la session.
+     */
     private void connexionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionbuttonActionPerformed
         if (pseudo.getText().isEmpty() || mdp.getText().isEmpty()) {
 //            JOptionPane.showMessageDialog(this, "CHAMP OBLIGATOIRE");

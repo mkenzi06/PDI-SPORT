@@ -35,6 +35,10 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
+/**
+ * Cette classe représente une fenêtre d'application pour afficher les performances de cyclisme.
+ * Elle hérite de la classe JFrame.
+ */
 public class TestJfreeChTime extends JFrame {
 
     private JList<String> userComboBox;
@@ -139,6 +143,24 @@ public class TestJfreeChTime extends JFrame {
         return cyclistFriends;
     }
 
+    /**
+     * Un ensemble de données par défaut pour les graphiques de catégories.
+     * Cette classe implémente l'interface CategoryDataset et fournit une implémentation de base pour stocker et accéder aux données des graphiques de catégories.
+     * Les données sont organisées en catégories et en séries, où chaque série représente une catégorie et chaque catégorie contient des valeurs.
+     * Les valeurs peuvent être des nombres ou des objets.
+     * 
+     * Cette classe est utilisée pour créer des ensembles de données pour les graphiques de catégories utilisés dans les bibliothèques de graphiques, telles que JFreeChart.
+     * 
+     * Pour créer un ensemble de données de catégories, vous pouvez utiliser le constructeur par défaut ou spécifier les catégories et les séries lors de la création de l'objet.
+     * Vous pouvez ensuite ajouter des valeurs aux catégories en utilisant les méthodes addValue() ou setValue().
+     * 
+     * Cette classe est généralement utilisée en conjonction avec des graphiques de catégories pour afficher des données sous forme de graphiques à barres, de graphiques à lignes, de graphiques à aires, etc.
+     * 
+     * Le dataset sera affiché dans un graphique qui contient les performances de deux utilisateurs.
+     * 
+     * @param user1 L'utilisateur 1 pour lequel les performances doivent être affichées  
+     * @param user2 L'utilisateur 2 pour lequel les performances doivent être affichées 
+     */
     private DefaultCategoryDataset createDataset2(User user1, User user2) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         Session session = DBConnection.getSession();

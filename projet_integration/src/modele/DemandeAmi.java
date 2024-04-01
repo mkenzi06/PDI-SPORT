@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 /**
  *
- * @author HP
+ * @author kenzi
  */
 
 @Entity
@@ -21,57 +21,83 @@ public class DemandeAmi {
     @ManyToOne
     @JoinColumn(name = "demandeur_id")
     private User demandeur;
-      @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private StatutDemandeAmi.StatutDemandeAm statut;
-
     @ManyToOne
     @JoinColumn(name = "destinataire_id")
     private User destinataire;
     
-        public void setDemandeur(User demandeur) {
+    /**
+     * Définit le demandeur de la demande d'ami.
+     * 
+     * @param demandeur le demandeur de la demande d'ami
+     */
+    public void setDemandeur(User demandeur) {
         this.demandeur = demandeur;
         demandeur.getDemandesEnvoyees().add(this);
     }
         
-        public void setDestinataire(User destinataire) {
+    /**
+     * Définit le destinataire de la demande d'ami.
+     * 
+     * @param destinataire le destinataire de la demande d'ami
+     */
+    public void setDestinataire(User destinataire) {
         this.destinataire = destinataire;
         destinataire.getDemandesRecues().add(this);
     }
 
     /**
-     * @return the id
+     * Récupère l'identifiant de la demande d'ami.
+     * 
+     * @return l'identifiant de la demande d'ami
      */
     public Long getId() {
         return id;
     }
-        public StatutDemandeAmi.StatutDemandeAm getStatut() {
+    
+    /**
+     * Récupère le statut de la demande d'ami.
+     * 
+     * @return le statut de la demande d'ami
+     */
+    public StatutDemandeAmi.StatutDemandeAm getStatut() {
         return statut;
     }
         
-        public void setStatut(StatutDemandeAmi.StatutDemandeAm l){
-            this.statut=l;
-        }
+    /**
+     * Définit le statut de la demande d'ami.
+     * 
+     * @param l le statut de la demande d'ami
+     */
+    public void setStatut(StatutDemandeAmi.StatutDemandeAm l){
+        this.statut=l;
+    }
 
     /**
-     * @param id the id to set
+     * Définit l'identifiant de la demande d'ami.
+     * 
+     * @param id l'identifiant de la demande d'ami
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
-     * @return the demandeur
+     * Récupère le demandeur de la demande d'ami.
+     * 
+     * @return le demandeur de la demande d'ami
      */
     public User getDemandeur() {
         return demandeur;
     }
 
     /**
-     * @return the destinataire
+     * Récupère le destinataire de la demande d'ami.
+     * 
+     * @return le destinataire de la demande d'ami
      */
     public User getDestinataire() {
         return destinataire;
     }
-
-    
 }

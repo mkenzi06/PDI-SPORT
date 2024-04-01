@@ -13,6 +13,9 @@ import javax.persistence.*;
  *
  * @author HP
  */
+/**
+ * Cette classe abstraite représente un sport.
+ */
 @Entity
 //@MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -35,46 +38,80 @@ public abstract class Sport {
     }
 
     /**
-     * @return the id
+     * Renvoie l'identifiant du sport.
+     * 
+     * @return l'identifiant du sport
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * @param id the id to set
+     * Définit l'identifiant du sport.
+     * 
+     * @param id l'identifiant du sport
      */
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
-     * @return the nom
+     * Renvoie le nom du sport.
+     * 
+     * @return le nom du sport
      */
     public abstract String getNom();
 //
 
+    /**
+     * Vérifie si le sport est du cyclisme.
+     * 
+     * @return true si le sport est du cyclisme, sinon false
+     */
     public abstract boolean estCyclisme();
 
+    /**
+     * Vérifie si le sport est du tennis.
+     * 
+     * @return true si le sport est du tennis, sinon false
+     */
     public abstract boolean estTennis();
 
+    /**
+     * Vérifie si le sport est du windsurf.
+     * 
+     * @return true si le sport est du windsurf, sinon false
+     */
     public abstract boolean estWindsurf();
 //
 
+    /**
+     * Vérifie si le sport est de l'haltérophilie.
+     * 
+     * @return true si le sport est de l'haltérophilie, sinon false
+     */
     public abstract boolean estHalterophilie();
 
+    /**
+     * Vérifie si le sport est de la natation.
+     * 
+     * @return true si le sport est de la natation, sinon false
+     */
     public abstract boolean estNatation();
 
+    /**
+     * Vérifie si le sport est de la course à pied.
+     * 
+     * @return true si le sport est de la course à pied, sinon false
+     */
     public abstract boolean estCap();
 
     /**
-     * @param nom the nom to set
+     * Définit le nom du sport.
+     * 
+     * @param nom le nom du sport
      */
     public void setNom(String nom) {
         this.nom = nom;
     }
-
-    /**
-     * @return the performances
-     */
 }

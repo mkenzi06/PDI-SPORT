@@ -28,6 +28,10 @@ import org.jfree.chart.needle.WindNeedle;
  *
  * @author Sabine
  */
+/**
+ * Cette classe représente la fenêtre d'inscription.
+ * Elle permet à l'utilisateur de s'inscrire en fournissant ses informations personnelles et en sélectionnant ses sports préférés.
+ */
 public class Inscription extends javax.swing.JFrame {
 
     private int nombreCasesCochees = 0;
@@ -97,6 +101,12 @@ public class Inscription extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Cette méthode gère le nombre de cases cochées.
+     * Elle calcule le nombre de cases cochées parmi les sports disponibles.
+     * Si le nombre de cases cochées dépasse 3, un message d'erreur est affiché
+     * et la dernière case cochée est désélectionnée.
+     */
     private void gestionNombreCasesCochées() {
         int nombreCasesActuelles = (cyclisme.isSelected() ? 1 : 0)
                 + (course.isSelected() ? 1 : 0)
@@ -392,6 +402,15 @@ public class Inscription extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    /**
+     * Méthode appelée lorsqu'un événement de clic se produit sur le bouton d'inscription.
+     * Cette méthode effectue les vérifications nécessaires sur les champs de saisie et les options sélectionnées,
+     * puis insère les données de l'utilisateur dans la base de données.
+     * Si toutes les vérifications sont réussies, un message de réussite d'inscription est affiché et l'utilisateur est redirigé vers l'écran de connexion.
+     * Sinon, des messages d'erreur appropriés sont affichés pour indiquer les problèmes rencontrés.
+     *
+     * @param evt L'événement de clic sur le bouton d'inscription
+     */
     private void inscriptionbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inscriptionbuttonActionPerformed
         if (pseudo.getText().isEmpty() || mdp.getText().isEmpty() || pseudo1.getText().isEmpty() || jTextField1.getText().isEmpty() || mdp3.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Erreur : Champ Obligatoire", "", JOptionPane.ERROR_MESSAGE);

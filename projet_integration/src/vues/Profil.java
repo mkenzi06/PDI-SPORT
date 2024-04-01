@@ -29,6 +29,11 @@ import org.hibernate.Transaction;
  *
  * @author HP
  */
+/**
+ * Cette classe représente la fenêtre de profil de l'utilisateur.
+ * Elle affiche les informations de l'utilisateur, telles que son nom, sa photo de profil et les sports qu'il pratique.
+ * Elle permet également d'afficher les demandes d'amis reçues et envoyées.
+ */
 public class Profil extends javax.swing.JFrame {
 
     private User u;
@@ -48,6 +53,13 @@ public class Profil extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Affiche les données de l'utilisateur.
+     * Cette méthode récupère les informations de l'utilisateur à partir de la base de données
+     * et les affiche dans les composants graphiques correspondants.
+     * Si l'utilisateur a une photo de profil, elle est affichée. Sinon, une photo par défaut est affichée.
+     * Les sports pratiqués par l'utilisateur sont également affichés avec leur nom et une photo correspondante.
+     */
     private void afficherDonneesUtilisateur() {
         // Exemple d'utilisation des données de l'utilisateur
         Session se = DBConnection.getSession();
@@ -138,6 +150,14 @@ public class Profil extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Cette méthode initialise la liste des amis de l'utilisateur.
+     * Elle récupère les demandes d'amis reçues et envoyées de l'utilisateur à partir de la base de données,
+     * puis les ajoute aux modèles de liste correspondants.
+     * Les demandes d'amis en attente sont ajoutées au modèle de liste "demandesEnAttenteModel",
+     * tandis que les demandes d'amis acceptées sont ajoutées au modèle de liste "demandesModel".
+     * Les modèles de liste sont ensuite assignés aux composants graphiques correspondants.
+     */
     public void initListeAmi() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -413,6 +433,14 @@ public class Profil extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitCurseurMouseClicked
     String str;
+    /**
+     * Méthode appelée lorsqu'un événement d'action se produit sur le bouton jButton1.
+     * Cette méthode permet de sélectionner une image à afficher dans une étiquette.
+     * Elle ouvre une boîte de dialogue de sélection de fichier, permettant à l'utilisateur de choisir une image.
+     * L'image sélectionnée est ensuite affichée dans l'étiquette lphoto.
+     * Le chemin absolu de l'image sélectionnée est également affiché dans le champ de texte tpath.
+     * Si aucun fichier n'est sélectionné, un message d'erreur est affiché.
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         //préciser le dossier ou se trouvent les images
@@ -440,6 +468,15 @@ public class Profil extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tpathActionPerformed
 
+    /**
+     * Méthode appelée lorsqu'un événement d'action se produit sur le bouton jButton2.
+     * Cette méthode met à jour la photo de profil de l'utilisateur en fonction du chemin d'accès spécifié dans le champ tpath.
+     * Si aucun chemin d'accès n'est spécifié, un message d'erreur est affiché.
+     * Si le chemin d'accès est valide, la méthode lit les données de la photo à partir du fichier correspondant et les enregistre dans la base de données.
+     * Ensuite, la méthode affiche un message de succès et réinitialise le champ tpath.
+     *
+     * @param evt L'événement d'action qui a déclenché la méthode
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if (tpath.getText().equals("")) {
             JOptionPane.showMessageDialog(this, "Veuillez choisir une photo", "ERREUR", JOptionPane.INFORMATION_MESSAGE);
@@ -501,6 +538,16 @@ public class Profil extends javax.swing.JFrame {
 
     }//GEN-LAST:event_listamisMouseClicked
 
+    /**
+     * Méthode appelée lorsqu'un clic de souris est effectué sur le composant demandeamis.
+     * Elle vérifie si l'utilisateur a cliqué une fois, puis récupère les indices des éléments sélectionnés.
+     * Pour chaque indice sélectionné, elle affiche une boîte de dialogue de confirmation pour accepter ou refuser la demande d'ami.
+     * Si l'utilisateur accepte la demande, elle met à jour le statut de la demande d'ami dans la base de données et affiche un message de succès.
+     * Si l'utilisateur refuse la demande, elle met à jour le statut de la demande d'ami dans la base de données et affiche un message d'échec.
+     * Enfin, elle met à jour la liste des amis.
+     *
+     * @param evt L'événement de clic de souris
+     */
     private void demandeamisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_demandeamisMouseClicked
         if (evt.getClickCount() == 1) { // Vérifie si l'utilisateur a cliqué une fois
             int[] indicesSelectionnes = demandeamis.getSelectedIndices();
@@ -572,6 +619,11 @@ public class Profil extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_rechamisbutton1ActionPerformed
+    /**
+     * Ouvre l'interface correspondante en fonction du nom du sport.
+     * 
+     * @param sportName le nom du sport
+     */
     private void openSportInterface(String sportName) {
         // Ouvrez l'interface correspondante en fonction du nom du sport
         switch (sportName) {

@@ -11,22 +11,27 @@ import javax.persistence.*;
  *
  * @author HP
  */
+/**
+ * Cette classe représente un objet Tennis qui hérite de la classe Sport.
+ * 
+ * Elle contient les informations spécifiques au tennis, telles que le nombre de sets gagnés et le nombre de sets par match.
+ */
 @Entity
 public class Tennis extends Sport {
 
     private int nombreSetsGagnes;
     private int nombresetsmatch;
 
-
-    // Constructeur, getters and setters
-    /**
-     * @return the nombreSetsGagnes
-     */
+   
     @Override
     public String getNom() {
         return "Tennis";
     }
 
+ // Getters and setters
+    /**
+     * @return the nombreSetsGagnes
+     */
     public int getNombreSetsGagnes() {
         return nombreSetsGagnes;
     }
@@ -37,26 +42,7 @@ public class Tennis extends Sport {
     public void setNombreSetsGagnes(int nombreSetsGagnes) {
         this.nombreSetsGagnes = nombreSetsGagnes;
     }
-
-    /**
-     * @return the pourcentagePremiersServicesReussis
-     */
-   
-
-    /**
-     * @param pourcentagePremiersServicesReussis the
-     * pourcentagePremiersServicesReussis to set
-     */
   
-
-    /**
-     * @return the nombreMoyenVoleesParMatch
-     */
-  
-
-    /**
-     * @param nombreMoyenVoleesParMatch the nombreMoyenVoleesParMatch to set
-     */
    
         @Override
     public boolean estCyclisme() {
@@ -95,9 +81,6 @@ public class Tennis extends Sport {
         return nombresetsmatch;
     }
 
-    /**
-     * @param nombresetsmatch the nombresetsmatch to set
-     */
     public void setNombresetsmatch(int nombresetsmatch) {
         this.nombresetsmatch = nombresetsmatch;
     }

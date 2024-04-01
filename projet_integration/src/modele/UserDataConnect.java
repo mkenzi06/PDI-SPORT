@@ -17,13 +17,24 @@ import static vues.Inscription.hashPassword;
 
 /**
  *
- * @author HP
+ * @author kenzi
+ */
+/**
+ * Cette classe représente une connexion aux données utilisateur.
+ * Elle permet de récupérer un utilisateur en fonction de son nom d'utilisateur et de son mot de passe,
+ * ainsi que de sauvegarder un utilisateur dans la base de données.
  */
 public class UserDataConnect {
 
     DBConnection dbc = new DBConnection();
-//    @SuppressWarnings("rawtypes")
 
+    /**
+     * Récupère un utilisateur en fonction de son nom d'utilisateur et de son mot de passe.
+     *
+     * @param username Le nom d'utilisateur de l'utilisateur recherché.
+     * @param password Le mot de passe de l'utilisateur recherché.
+     * @return L'utilisateur correspondant aux informations fournies, ou null si aucun utilisateur n'est trouvé.
+     */
     public static User getUserByUsernameAndPassword(String username, String password) {
 
         Session session = DBConnection.getSession();
@@ -41,20 +52,23 @@ public class UserDataConnect {
             read.commit();
             session.close();
             return u1;
-        }else{
+        } else {
             session.close();
         }
-            
-        
+
         return null;
     }
 
+    /**
+     * Sauvegarde un utilisateur dans la base de données.
+     *
+     * @param user L'utilisateur à sauvegarder.
+     */
     public static void saveUser(User user) {
         Session session = DBConnection.getSession();
         Transaction read = session.beginTransaction();
 
         try {
-//            session.save(user);
             session.persist(user);
             read.commit();
         } catch (Exception e) {
