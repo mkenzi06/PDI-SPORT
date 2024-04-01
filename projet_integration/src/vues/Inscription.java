@@ -168,14 +168,14 @@ public class Inscription extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(143, 143, 143));
+        jPanel1.setBackground(new java.awt.Color(166, 185, 181));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        connexionText.setFont(new java.awt.Font("Baskerville Old Face", 0, 32)); // NOI18N
-        connexionText.setForeground(new java.awt.Color(255, 255, 255));
+        connexionText.setFont(new java.awt.Font("Georgia", 1, 30)); // NOI18N
+        connexionText.setForeground(new java.awt.Color(224, 106, 22));
         connexionText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        connexionText.setText("Créer un nouveau compte");
-        jPanel1.add(connexionText, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 420, 41));
+        connexionText.setText("Suivez, comparez, excellez!");
+        jPanel1.add(connexionText, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 420, 41));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Mask_group.png"))); // NOI18N
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 110, -1, -1));
@@ -207,6 +207,7 @@ public class Inscription extends javax.swing.JFrame {
         jLabel8.setText("Confirmer votre mot de passe");
         formSection.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, 341, -1));
 
+        inscriptionbutton.setBackground(new java.awt.Color(255, 255, 255));
         inscriptionbutton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         inscriptionbutton.setForeground(new java.awt.Color(25, 149, 173));
         inscriptionbutton.setText("Inscription");

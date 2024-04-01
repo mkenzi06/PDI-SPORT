@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -34,7 +35,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author HP
  */
-public class JfreeChHalterophilie extends JFrame{
+public class JfreeChHalterophilie extends JFrame {
 
     private JList<String> userComboBox;
     private DefaultCategoryDataset dataset;
@@ -166,7 +167,7 @@ public class JfreeChHalterophilie extends JFrame{
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estHalterophilie()) {
-                        
+
                         double value = isDistance ? ((Halterophilie) p.getSport()).getPoidsLeve() : ((Halterophilie) p.getSport()).getNombreRepetitions();
                         Date date = p.getDate();
                         String formattedDate = dateFormat.format(date);
@@ -252,6 +253,7 @@ public class JfreeChHalterophilie extends JFrame{
         setSize(800, 600);
         this.u = u;
         this.isDistance = isDistance;
+        JLabel userLabel = new JLabel("Comparez avec vote ami"); // Création du JLabel
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox);
 
@@ -337,7 +339,15 @@ public class JfreeChHalterophilie extends JFrame{
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
         // Ajout du panel de bouton au nord de la fenêtre

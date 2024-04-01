@@ -61,7 +61,7 @@ public class Connexion extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(143, 143, 143));
+        jPanel1.setBackground(new java.awt.Color(166, 185, 181));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Mask_group.png"))); // NOI18N
@@ -84,7 +84,7 @@ public class Connexion extends javax.swing.JFrame {
         });
         formSection.add(exitCurseur, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 0, 40, 29));
 
-        connexionText.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
+        connexionText.setFont(new java.awt.Font("Georgia", 1, 36)); // NOI18N
         connexionText.setForeground(new java.awt.Color(255, 255, 255));
         connexionText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         connexionText.setText("Connexion");
@@ -102,14 +102,15 @@ public class Connexion extends javax.swing.JFrame {
         formSection.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 341, -1));
 
         pseudoIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pseudoIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8_user_20px_1.png"))); // NOI18N
-        formSection.add(pseudoIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 130, 40, 39));
+        pseudoIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/profil.png"))); // NOI18N
+        formSection.add(pseudoIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 130, 30, 40));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(199, 226, 255));
         jLabel8.setText("Mot de passe");
         formSection.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 341, -1));
 
+        connexionbutton.setBackground(new java.awt.Color(255, 255, 255));
         connexionbutton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         connexionbutton.setForeground(new java.awt.Color(25, 149, 173));
         connexionbutton.setText("Connexion");
@@ -119,7 +120,7 @@ public class Connexion extends javax.swing.JFrame {
                 connexionbuttonActionPerformed(evt);
             }
         });
-        formSection.add(connexionbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(34, 306, 341, 40));
+        formSection.add(connexionbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 340, 40));
 
         inscription.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         inscription.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,8 +156,8 @@ public class Connexion extends javax.swing.JFrame {
         });
         formSection.add(pseudo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, 290, 30));
 
-        mdpIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
-        formSection.add(mdpIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 210, 30, 30));
+        mdpIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cle.png"))); // NOI18N
+        formSection.add(mdpIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, 40, -1));
 
         getContentPane().add(formSection, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, 420, 440));
 

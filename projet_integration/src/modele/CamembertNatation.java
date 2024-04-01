@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -254,7 +255,7 @@ public class CamembertNatation extends JFrame {
         setSize(800, 600);
         this.u = u;
         this.d = d;
-
+        JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox, d);
 
@@ -333,7 +334,15 @@ public class CamembertNatation extends JFrame {
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
 

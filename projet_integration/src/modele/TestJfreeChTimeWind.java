@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -35,6 +36,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * @author HP
  */
 public class TestJfreeChTimeWind extends JFrame {
+
     private JList<String> userComboBox;
     private DefaultCategoryDataset dataset;
     private boolean isDistance;
@@ -66,10 +68,10 @@ public class TestJfreeChTimeWind extends JFrame {
                 for (Performances p : sortedPerformances) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
                     if (p.getSport().estWindsurf()) {
-                    double value = isDistance ? ((WindSurf) p.getSport()).getDistanceParcourue() : ((WindSurf) p.getSport()).getTempsPerformance();
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    dataset.addValue(value, isDistance ? "Distance Parcourue" : "Temps Parcouru", formattedDate);
+                        double value = isDistance ? ((WindSurf) p.getSport()).getDistanceParcourue() : ((WindSurf) p.getSport()).getTempsPerformance();
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        dataset.addValue(value, isDistance ? "Distance Parcourue" : "Temps Parcouru", formattedDate);
                     }
                 }
             }
@@ -165,14 +167,14 @@ public class TestJfreeChTimeWind extends JFrame {
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estWindsurf()) {
-                    double value = isDistance ? ((WindSurf) p.getSport()).getDistanceParcourue() : ((WindSurf) p.getSport()).getTempsPerformance();
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    if (performancesUser1.contains(p)) {
-                        dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                    } else if (performancesUser2.contains(p)) {
-                        dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                    }
+                        double value = isDistance ? ((WindSurf) p.getSport()).getDistanceParcourue() : ((WindSurf) p.getSport()).getTempsPerformance();
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        if (performancesUser1.contains(p)) {
+                            dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
+                        } else if (performancesUser2.contains(p)) {
+                            dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
+                        }
                     }
                 }
             }
@@ -249,6 +251,7 @@ public class TestJfreeChTimeWind extends JFrame {
         setLocationRelativeTo(null);
         setSize(800, 600);
         this.u = u;
+        JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         this.isDistance = isDistance;
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox);
@@ -264,7 +267,7 @@ public class TestJfreeChTimeWind extends JFrame {
                 isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                 dataset, // Ensemble de données
                 PlotOrientation.VERTICAL,// Orientation du graphique (horizontal)
-                true , // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                true, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
                 true, // Inclure les tooltips
                 true // Inclure les URLs
         );
@@ -331,15 +334,22 @@ public class TestJfreeChTimeWind extends JFrame {
 
         JPanel buttonPanel = new JPanel(); // Création du panel pour le bouton de réinitialisation
         buttonPanel.add(resetButton); // Ajout du bouton de réinitialisation au panel
-      // Création du bouton pour calculer la vitesse
-
+        // Création du bouton pour calculer la vitesse
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
-       // Ajout du panel de bouton au nord de la fenêtre
+        // Ajout du panel de bouton au nord de la fenêtre
     }
 
     public static void main(String[] args) {

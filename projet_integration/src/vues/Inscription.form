@@ -33,7 +33,7 @@
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="8f" green="8f" red="8f" type="rgb"/>
+          <Color blue="b5" green="b9" red="a6" type="rgb"/>
         </Property>
       </Properties>
       <Constraints>
@@ -49,17 +49,17 @@
         <Component class="javax.swing.JLabel" name="connexionText">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Baskerville Old Face" size="32" style="0"/>
+              <Font name="Georgia" size="30" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+              <Color blue="16" green="6a" red="e0" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Cr&#xe9;er un nouveau compte"/>
+            <Property name="text" type="java.lang.String" value="Suivez, comparez, excellez!"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="30" y="60" width="420" height="41"/>
+              <AbsoluteConstraints x="30" y="50" width="420" height="41"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -150,6 +150,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="inscriptionbutton">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>

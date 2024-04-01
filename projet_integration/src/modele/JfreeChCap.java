@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -66,11 +67,11 @@ public class JfreeChCap extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     if (p.getSport().estCap()) {
-                    // Utilisez isDistance pour décider quel attribut extraire des performances
-                    double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    dataset.addValue(value, isDistance ? "Distance Parcourue" : "Temps Parcouru", formattedDate);
+                        // Utilisez isDistance pour décider quel attribut extraire des performances
+                        double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        dataset.addValue(value, isDistance ? "Distance Parcourue" : "Temps Parcouru", formattedDate);
                     }
                 }
             }
@@ -166,14 +167,14 @@ public class JfreeChCap extends JFrame {
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estCap()) {
-                    double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    if (performancesUser1.contains(p)) {
-                        dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                    } else if (performancesUser2.contains(p)) {
-                        dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
-                    }
+                        double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        if (performancesUser1.contains(p)) {
+                            dataset.addValue(value, user1.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
+                        } else if (performancesUser2.contains(p)) {
+                            dataset.addValue(value, user2.getPseudo() + (isDistance ? " - Distance Parcourue" : " - Temps Parcouru"), formattedDate);
+                        }
                     }
                 }
             }
@@ -245,12 +246,13 @@ public class JfreeChCap extends JFrame {
     private User u;
 
     public JfreeChCap(final User u, final boolean isDistance) {
-        setTitle("Performances Cyclisme");
+        setTitle("Performances Course à pied");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
         this.u = u;
         this.isDistance = isDistance;
+        JLabel userLabel = new JLabel("Comparez avec vote ami"); // Création du JLabel
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox);
 
@@ -258,9 +260,8 @@ public class JfreeChCap extends JFrame {
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
 
         // Créer le graphique initial
-
         DefaultCategoryDataset dataset = createDataset(this.u);
-                System.out.println("Dataset size: " + dataset.getRowCount()); // Assurez-vous que le dataset contient des données
+        System.out.println("Dataset size: " + dataset.getRowCount()); // Assurez-vous que le dataset contient des données
 
 // Création du graphique initial
         System.out.println("Creating chart...");
@@ -341,7 +342,15 @@ public class JfreeChCap extends JFrame {
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        // add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
         // Ajout du panel de bouton au nord de la fenêtre

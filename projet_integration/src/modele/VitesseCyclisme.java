@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -61,13 +62,13 @@ public class VitesseCyclisme extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     if (p.getSport().estCyclisme()) {
-                    // Utilisez isDistance pour décider quel attribut extraire des performances
-                    double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
-                    double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
+                        // Utilisez isDistance pour décider quel attribut extraire des performances
+                        double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
+                        double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
+                        double speed = distance /(temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
                     }
                 }
             }
@@ -173,16 +174,16 @@ public class VitesseCyclisme extends JFrame {
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estCyclisme()) {
-                    double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
-                    double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    if (performancesUser1.contains(p)) {
-                        dataset.addValue(speed, user1.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    } else if (performancesUser2.contains(p)) {
-                        dataset.addValue(speed, user2.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    }
+                        double distance = ((Cyclisme) p.getSport()).getDistanceTotaleParcourue();
+                        double temps = ((Cyclisme) p.getSport()).getTempsPerformance();
+                        double speed = distance / (temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        if (performancesUser1.contains(p)) {
+                            dataset.addValue(speed, user1.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        } else if (performancesUser2.contains(p)) {
+                            dataset.addValue(speed, user2.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        }
                     }
                 }
             }
@@ -198,16 +199,18 @@ public class VitesseCyclisme extends JFrame {
         return dataset;
     }
     private User u;
-    public VitesseCyclisme(){
-        
+
+    public VitesseCyclisme() {
+
     }
-    public VitesseCyclisme(final User u){
+
+    public VitesseCyclisme(final User u) {
         setTitle("Performances Cyclisme");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
         this.u = u;
-        
+        JLabel userLabel = new JLabel("Comparez avec votre ami "); // Création du JLabel
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox);
 
@@ -289,14 +292,21 @@ public class VitesseCyclisme extends JFrame {
 
         JPanel buttonPanel = new JPanel(); // Création du panel pour le bouton de réinitialisation
         buttonPanel.add(resetButton); // Ajout du bouton de réinitialisation au panel
-        
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
-       
+
     }
 
     public static void main(String[] args) {

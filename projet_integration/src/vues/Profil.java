@@ -224,30 +224,34 @@ public class Profil extends javax.swing.JFrame {
         backblue.setBackground(new java.awt.Color(25, 149, 173));
         backblue.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        nomprenom.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        nomprenom.setFont(new java.awt.Font("Georgia", 3, 24)); // NOI18N
         nomprenom.setForeground(new java.awt.Color(255, 255, 255));
         nomprenom.setText("Nom Prenom");
         backblue.add(nomprenom, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
         mesportsbutton.setBackground(new java.awt.Color(255, 255, 255));
-        mesportsbutton.setText("Mes sports");
+        mesportsbutton.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
+        mesportsbutton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-settings-32.png"))); // NOI18N
+        mesportsbutton.setText("Mon profil athlétique");
         mesportsbutton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         mesportsbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mesportsbuttonActionPerformed(evt);
             }
         });
-        backblue.add(mesportsbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 70, 248, 54));
+        backblue.add(mesportsbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 70, 420, 60));
 
         rechamisbutton.setBackground(new java.awt.Color(255, 255, 255));
-        rechamisbutton.setText("Recherche amis");
+        rechamisbutton.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
+        rechamisbutton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-find-user-male-32.png"))); // NOI18N
+        rechamisbutton.setText("Recommandations d'amis");
         rechamisbutton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         rechamisbutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rechamisbuttonActionPerformed(evt);
             }
         });
-        backblue.add(rechamisbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, 248, 54));
+        backblue.add(rechamisbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, 420, 60));
 
         exitCurseur.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         exitCurseur.setForeground(new java.awt.Color(255, 255, 255));
@@ -269,20 +273,21 @@ public class Profil extends javax.swing.JFrame {
 
         backblue.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 170, 130));
 
-        jButton1.setText("Charger la photo");
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/telecharger.png"))); // NOI18N
+        jButton1.setBorder(null);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        backblue.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, -1, -1));
+        backblue.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 40, 30));
 
         tpath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tpathActionPerformed(evt);
             }
         });
-        backblue.add(tpath, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 180, -1));
+        backblue.add(tpath, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 180, -1));
 
         jButton2.setText("Soumettre");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -290,26 +295,31 @@ public class Profil extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        backblue.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, -1, -1));
+        backblue.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 110, -1, -1));
 
         rechamisbutton1.setBackground(new java.awt.Color(255, 255, 255));
-        rechamisbutton1.setText("Deconnexion");
-        rechamisbutton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        rechamisbutton1.setFont(new java.awt.Font("Georgia", 3, 13)); // NOI18N
+        rechamisbutton1.setForeground(new java.awt.Color(224, 106, 22));
+        rechamisbutton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/se-deconnecter.png"))); // NOI18N
+        rechamisbutton1.setText("Se déconnecter");
+        rechamisbutton1.setBorder(null);
         rechamisbutton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rechamisbutton1ActionPerformed(evt);
             }
         });
-        backblue.add(rechamisbutton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 70, 248, 54));
+        backblue.add(rechamisbutton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1320, 80, 150, 40));
 
         getContentPane().add(backblue, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1490, 180));
 
         backgris1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        listamistext.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        listamistext.setText("Liste amis");
-        backgris1.add(listamistext, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+        listamistext.setFont(new java.awt.Font("Georgia", 1, 30)); // NOI18N
+        listamistext.setForeground(new java.awt.Color(25, 148, 173));
+        listamistext.setText("Liste d'amis");
+        backgris1.add(listamistext, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
 
+        listamis.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         listamis.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -325,6 +335,7 @@ public class Profil extends javax.swing.JFrame {
 
         backgris1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 230, 240));
 
+        demandeamis.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         demandeamis.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -342,15 +353,16 @@ public class Profil extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(demandeamis);
 
-        backgris1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 230, 240));
+        backgris1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 230, 240));
 
-        demandemaistext.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        demandemaistext.setText("Demande amis");
-        backgris1.add(demandemaistext, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, -1, -1));
+        demandemaistext.setFont(new java.awt.Font("Georgia", 1, 30)); // NOI18N
+        demandemaistext.setForeground(new java.awt.Color(224, 106, 22));
+        demandemaistext.setText("Demandes d'amis");
+        backgris1.add(demandemaistext, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, -1, -1));
 
         getContentPane().add(backgris1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 300, 610));
 
-        sportbutton3.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        sportbutton3.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         sportbutton3.setForeground(new java.awt.Color(17, 149, 173));
         sportbutton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
         sportbutton3.setText("Nom Sport");
@@ -359,9 +371,9 @@ public class Profil extends javax.swing.JFrame {
                 sportbutton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(sportbutton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 500, 380, 280));
+        getContentPane().add(sportbutton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 260, 380, 430));
 
-        sportbutton1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        sportbutton1.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         sportbutton1.setForeground(new java.awt.Color(25, 149, 173));
         sportbutton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
         sportbutton1.setText("Nom Sport");
@@ -370,9 +382,9 @@ public class Profil extends javax.swing.JFrame {
                 sportbutton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(sportbutton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 200, 380, 280));
+        getContentPane().add(sportbutton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 260, 380, 430));
 
-        sportbutton2.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        sportbutton2.setFont(new java.awt.Font("Times New Roman", 3, 36)); // NOI18N
         sportbutton2.setForeground(new java.awt.Color(25, 149, 173));
         sportbutton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/padlock (1).png"))); // NOI18N
         sportbutton2.setText("Nom Sport");
@@ -381,7 +393,7 @@ public class Profil extends javax.swing.JFrame {
                 sportbutton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(sportbutton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 200, 380, 280));
+        getContentPane().add(sportbutton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 260, 370, 430));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -553,7 +565,7 @@ public class Profil extends javax.swing.JFrame {
     }//GEN-LAST:event_demandeamisMouseClicked
 
     private void rechamisbutton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechamisbutton1ActionPerformed
-        if(JOptionPane.showConfirmDialog(this, "voulez vous vous deconnectez ", "ta", 2, JOptionPane.YES_NO_CANCEL_OPTION)==JOptionPane.YES_OPTION){
+        if(JOptionPane.showConfirmDialog(this, "Voulez-vous vous déconnectez ? ", "Déconnexion", 2, JOptionPane.YES_NO_CANCEL_OPTION)==JOptionPane.YES_OPTION){
         this.dispose();
         Connexion c = new Connexion();
         c.setVisible(true);

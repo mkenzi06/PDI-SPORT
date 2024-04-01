@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -35,7 +36,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * @author HP
  */
 public class VitesseWind extends JFrame {
-      private JList<String> userComboBox;
+
+    private JList<String> userComboBox;
     private DefaultCategoryDataset dataset;
 
     private DefaultCategoryDataset createDataset(User selectedUser) {
@@ -60,13 +62,13 @@ public class VitesseWind extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     if (p.getSport().estWindsurf()) {
-                    // Utilisez isDistance pour décider quel attribut extraire des performances
-                    double distance = ((WindSurf) p.getSport()).getDistanceParcourue();
-                    double temps = ((WindSurf) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
+                        // Utilisez isDistance pour décider quel attribut extraire des performances
+                        double distance = ((WindSurf) p.getSport()).getDistanceParcourue();
+                        double temps = ((WindSurf) p.getSport()).getTempsPerformance();
+                        double speed = distance / (temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
                     }
                 }
             }
@@ -80,16 +82,16 @@ public class VitesseWind extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list) {
+    private void fillWindFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user);
-        for (String friend : cyclistFriends) {
+        List<String> windFriends = getWindFriends(user);
+        for (String friend : windFriends) {
             model.addElement(friend);
         }
         list.setModel(model);
     }
 
-    private boolean pratiqueCyclisme(User user) {
+    private boolean pratiqueWind(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estWindsurf()) {
@@ -99,8 +101,8 @@ public class VitesseWind extends JFrame {
         return false;
     }
 
-    private List<String> getCyclistFriends(User user) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getWindFriends(User user) {
+        List<String> windFriends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -114,8 +116,8 @@ public class VitesseWind extends JFrame {
                         User demandeur = demande.getDemandeur();
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-                            cyclistFriends.add(u1.getPseudo());
+                        if (pratiqueWind(u1)) {
+                            windFriends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -126,8 +128,8 @@ public class VitesseWind extends JFrame {
                     if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                        if (u2 != null && pratiqueWind(u2) && u2.getPseudo() != null) {
+                            windFriends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -141,7 +143,7 @@ public class VitesseWind extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return windFriends;
     }
 
     private DefaultCategoryDataset createDataset2(User user1, User user2) {
@@ -172,16 +174,16 @@ public class VitesseWind extends JFrame {
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estWindsurf()) {
-                    double distance = ((WindSurf) p.getSport()).getDistanceParcourue();
-                    double temps = ((WindSurf) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    if (performancesUser1.contains(p)) {
-                        dataset.addValue(speed, user1.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    } else if (performancesUser2.contains(p)) {
-                        dataset.addValue(speed, user2.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    }
+                        double distance = ((WindSurf) p.getSport()).getDistanceParcourue();
+                        double temps = ((WindSurf) p.getSport()).getTempsPerformance();
+                        double speed = distance / (temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        if (performancesUser1.contains(p)) {
+                            dataset.addValue(speed, user1.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        } else if (performancesUser2.contains(p)) {
+                            dataset.addValue(speed, user2.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        }
                     }
                 }
             }
@@ -197,18 +199,20 @@ public class VitesseWind extends JFrame {
         return dataset;
     }
     private User u;
-    public VitesseWind(){
-        
+
+    public VitesseWind() {
+
     }
-    public VitesseWind(final User u){
+
+    public VitesseWind(final User u) {
         setTitle("Performances WindSurf");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
         this.u = u;
-        
+        JLabel userLabel = new JLabel("Comparez avec votre ami "); // Création du JLabel
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox);
+        fillWindFriendsList(u, userComboBox);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
@@ -288,14 +292,22 @@ public class VitesseWind extends JFrame {
 
         JPanel buttonPanel = new JPanel(); // Création du panel pour le bouton de réinitialisation
         buttonPanel.add(resetButton); // Ajout du bouton de réinitialisation au panel
-        
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
+
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
-    // Ajout du panel de bouton au nord de la fenêtre
+        // Ajout du panel de bouton au nord de la fenêtre
     }
 
     public static void main(String[] args) {

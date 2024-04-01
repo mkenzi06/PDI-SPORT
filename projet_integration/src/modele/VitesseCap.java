@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -35,6 +36,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * @author HP
  */
 public class VitesseCap extends JFrame {
+
     private JList<String> userComboBox;
     private DefaultCategoryDataset dataset;
 
@@ -60,13 +62,13 @@ public class VitesseCap extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     if (p.getSport().estCap()) {
-                    // Utilisez isDistance pour décider quel attribut extraire des performances
-                    double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
-                    double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
+                        // Utilisez isDistance pour décider quel attribut extraire des performances
+                        double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
+                        double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
+                        double speed = distance / (temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        dataset.addValue(speed, "Vitesse (km/h)", formattedDate);
                     }
                 }
             }
@@ -80,16 +82,16 @@ public class VitesseCap extends JFrame {
         return dataset;
     }
 
-    private void fillCyclistFriendsList(User user, JList<String> list) {
+    private void fillCapFriendsList(User user, JList<String> list) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> cyclistFriends = getCyclistFriends(user);
-        for (String friend : cyclistFriends) {
+        List<String> capFriends = getCapFriends(user);
+        for (String friend : capFriends) {
             model.addElement(friend);
         }
         list.setModel(model);
     }
 
-    private boolean pratiqueCyclisme(User user) {
+    private boolean pratiqueCap(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
             if (sport.estCap()) {
@@ -99,8 +101,8 @@ public class VitesseCap extends JFrame {
         return false;
     }
 
-    private List<String> getCyclistFriends(User user) {
-        List<String> cyclistFriends = new ArrayList<>();
+    private List<String> getCapFriends(User user) {
+        List<String> capFriends = new ArrayList<>();
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
         User us = (User) session.get(User.class, user.getId());
@@ -114,8 +116,8 @@ public class VitesseCap extends JFrame {
                         User demandeur = demande.getDemandeur();
                         User u1 = (User) session.get(User.class, demandeur.getId());
                         System.out.println("modele.TestJfreeCh.fillComboBox()" + u1.getPseudo());
-                        if (pratiqueCyclisme(u1)) {
-                            cyclistFriends.add(u1.getPseudo());
+                        if (pratiqueCap(u1)) {
+                            capFriends.add(u1.getPseudo());
                         }
                     }
                 }
@@ -126,8 +128,8 @@ public class VitesseCap extends JFrame {
                     if (demande != null && demande.getStatut() == StatutDemandeAmi.StatutDemandeAm.ACCEPTEE) {
                         User destinataire = demande.getDestinataire();
                         User u2 = (User) session.get(User.class, destinataire.getId());
-                        if (u2 != null && pratiqueCyclisme(u2) && u2.getPseudo() != null) {
-                            cyclistFriends.add(destinataire.getPseudo());
+                        if (u2 != null && pratiqueCap(u2) && u2.getPseudo() != null) {
+                            capFriends.add(destinataire.getPseudo());
                         }
                     }
                 }
@@ -141,7 +143,7 @@ public class VitesseCap extends JFrame {
             session.close();
         }
 
-        return cyclistFriends;
+        return capFriends;
     }
 
     private DefaultCategoryDataset createDataset2(User user1, User user2) {
@@ -172,16 +174,16 @@ public class VitesseCap extends JFrame {
 
                 for (Performances p : mergedPerformances) {
                     if (p.getSport().estCap()) {
-                    double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
-                    double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
-                    double speed = distance / temps;
-                    Date date = p.getDate();
-                    String formattedDate = dateFormat.format(date);
-                    if (performancesUser1.contains(p)) {
-                        dataset.addValue(speed, user1.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    } else if (performancesUser2.contains(p)) {
-                        dataset.addValue(speed, user2.getPseudo() +  "Vitesse(km/h)", formattedDate);
-                    }
+                        double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
+                        double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
+                        double speed = distance / (temps / 60);
+                        Date date = p.getDate();
+                        String formattedDate = dateFormat.format(date);
+                        if (performancesUser1.contains(p)) {
+                            dataset.addValue(speed, user1.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        } else if (performancesUser2.contains(p)) {
+                            dataset.addValue(speed, user2.getPseudo() + "Vitesse(km/h)", formattedDate);
+                        }
                     }
                 }
             }
@@ -197,18 +199,20 @@ public class VitesseCap extends JFrame {
         return dataset;
     }
     private User u;
-    public VitesseCap(){
-        
+
+    public VitesseCap() {
+
     }
-    public VitesseCap(final User u){
+
+    public VitesseCap(final User u) {
         setTitle("Performances Cyclisme");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
         this.u = u;
-        
+        JLabel userLabel = new JLabel("Comparez avec votre ami "); // Création du JLabel
         userComboBox = new JList<>();
-        fillCyclistFriendsList(u, userComboBox);
+        fillCapFriendsList(u, userComboBox);
 
         // Créer un JPanel pour contenir les graphiques
         final JPanel chartPanelContainer = new JPanel(new BorderLayout());
@@ -325,7 +329,7 @@ public class VitesseCap extends JFrame {
 
                 chartPanelContainer.removeAll();
                 JFreeChart chart = ChartFactory.createBarChart3D(
-                        "Vitesse de Cyclisme", // Titre du graphique
+                        "Vitesse de Course à pied", // Titre du graphique
                         "Date", // Libellé de l'axe des catégories (horizontal)
                         "Vitesse (km/h)", // Libellé de l'axe des valeurs (vertical)
                         dataset, // Ensemble de données
@@ -347,7 +351,15 @@ public class VitesseCap extends JFrame {
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        // Créer un JPanel pour contenir le JLabel et le JList
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
         getContentPane().add(calculateSpeedButtonPanel, BorderLayout.SOUTH);// Ajout du panel de bouton au nord de la fenêtre
@@ -362,5 +374,5 @@ public class VitesseCap extends JFrame {
             }
         });
     }
-    
+
 }

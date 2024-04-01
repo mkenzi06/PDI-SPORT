@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -32,7 +33,7 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author HP
  */
-public class CamembertTennis extends JFrame{
+public class CamembertTennis extends JFrame {
 
     private JList<String> userComboBox;
     private DefaultCategoryDataset dataset;
@@ -56,24 +57,23 @@ public class CamembertTennis extends JFrame{
 
                 // Variables pour stocker les temps passés pour chaque style de nage
                 int Sets = 0;
-                
 
                 // Calculer les temps passés pour chaque style de nage
                 for (Performances performanc : performances) {
                     if (performanc.getSport().estTennis()) {
                         Tennis swimming = (Tennis) performanc.getSport();
                         totalsets += swimming.getNombresetsmatch();
-                        
+
                         Sets += swimming.getNombreSetsGagnes();
                     }
                 }
                 double crawlPercentage = (double) Sets / totalsets * 100;
-                
+
                 double freeSwimmingPercentage = 100 - crawlPercentage;
 
                 // Ajouter les valeurs au dataset
                 dataset.setValue("sets gagnes", crawlPercentage);
-                
+
                 dataset.setValue("sets perdues", freeSwimmingPercentage);
 
             }
@@ -189,9 +189,9 @@ public class CamembertTennis extends JFrame{
 
                 // Variables pour stocker les temps passés pour chaque style de nage pour les deux utilisateurs
                 double user1CrawlTime = 0;
-                
+
                 double user2CrawlTime = 0;
-                
+
                 int totalTimeUser1 = 0;
                 int totalTimeUser2 = 0;
 
@@ -205,24 +205,24 @@ public class CamembertTennis extends JFrame{
                             totalTimeUser1 += swimming.getNombresetsmatch();
                         } else if (performance.getUser().equals(dbUser2)) {
                             user2CrawlTime += swimming.getNombreSetsGagnes();
-                            
+
                             totalTimeUser2 += swimming.getNombresetsmatch();
                         }
 
                     }
                 }
                 double crawlPercentageUser1 = (double) user1CrawlTime / totalTimeUser1 * 100;
-                
-                double freeSwimmingPercentageUser1 = 100 - crawlPercentageUser1 ;
+
+                double freeSwimmingPercentageUser1 = 100 - crawlPercentageUser1;
                 double crawlPercentageUser2 = (double) user2CrawlTime / totalTimeUser2 * 100;
-               
-                double freeSwimmingPercentageUser2 = 100 - crawlPercentageUser2 ;
+
+                double freeSwimmingPercentageUser2 = 100 - crawlPercentageUser2;
                 // Ajouter les valeurs au dataset en les différenciant pour les deux utilisateurs
                 dataset.setValue(user1.getPseudo() + " - Sets Gagne", crawlPercentageUser1);
-                
+
                 dataset.setValue(this.u.getPseudo() + " - Sets perdues", freeSwimmingPercentageUser1);
                 dataset.setValue(user2.getPseudo() + " - Sets gagne", crawlPercentageUser2);
-               
+
                 dataset.setValue(user2.getPseudo() + " -  Sets perdues", freeSwimmingPercentageUser2);
 
             }
@@ -251,6 +251,7 @@ public class CamembertTennis extends JFrame{
         this.u = u;
         this.d = d;
 
+        JLabel userLabel = new JLabel("Comparez avec votre ami"); // Création du JLabel
         userComboBox = new JList<>();
         fillCyclistFriendsList(u, userComboBox, d);
 
@@ -329,7 +330,14 @@ public class CamembertTennis extends JFrame{
 
 // Ajout du panel de bouton de calcul de vitesse au nord de la fenêtre
 //        getContentPane().add(calculateSpeedButtonPanel, BorderLayout.NORTH);
-        add(userComboBox, BorderLayout.EAST);
+        //add(userComboBox, BorderLayout.EAST);
+        JPanel userListPanel = new JPanel(new BorderLayout());
+        userListPanel.add(userLabel, BorderLayout.NORTH); // Ajouter le JLabel au JPanel
+        userListPanel.add(userComboBox, BorderLayout.CENTER); // Ajouter le JList au JPanel
+
+// Maintenant, vous pouvez ajouter userListPanel au lieu de userComboBox directement
+// add(userComboBox, BorderLayout.EAST);
+        add(userListPanel, BorderLayout.EAST); // Ajout du JPanel au conteneur principal
         getContentPane().add(chartPanelContainer, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
 
