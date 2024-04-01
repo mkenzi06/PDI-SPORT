@@ -65,7 +65,7 @@ public class JfreeChCap extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : sortedPerformances) {
-                    if (p.getSport() instanceof CourseAPied) {
+                    if (p.getSport().estCap()) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
                     double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
@@ -165,7 +165,7 @@ public class JfreeChCap extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
-                    if (p.getSport() instanceof CourseAPied) {
+                    if (p.getSport().estCap()) {
                     double value = isDistance ? ((CourseAPied) p.getSport()).getDistanceParcourue() : ((CourseAPied) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
@@ -235,7 +235,7 @@ public class JfreeChCap extends JFrame {
     private boolean pratiqueCyclisme(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
-            if (sport instanceof CourseAPied) {
+            if (sport.estCap()) {
                 return true;
             }
         }
@@ -295,7 +295,7 @@ public class JfreeChCap extends JFrame {
                                 isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                                 dataset2, // Ensemble de données
                                 PlotOrientation.VERTICAL,// Orientation du graphique (horizontal)
-                                false, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                                true, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
                                 true, // Inclure les tooltips
                                 true // Inclure les URLs
                         );

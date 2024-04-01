@@ -50,7 +50,12 @@ public class Profil extends javax.swing.JFrame {
 
     private void afficherDonneesUtilisateur() {
         // Exemple d'utilisation des données de l'utilisateur
-        nomprenom.setText(u.getPrenom() + "\t " + u.getNom());
+        Session se = DBConnection.getSession();
+        Transaction t = se.beginTransaction();
+        User ur = (User) se.get(User.class, u.getId());
+        nomprenom.setText(ur.getNom() + "\t " + ur.getPrenom());
+        t.commit();
+        se.close();
         if (u.getPhotoProfil() != null && u.getPhotoProfil().length > 0) {
             // Si l'utilisateur a une photo, afficher cette photo
             ImageIcon img = new ImageIcon(u.getPhotoProfil());
@@ -126,71 +131,61 @@ public class Profil extends javax.swing.JFrame {
         } else if (i == 2) {
             sportbutton3.setVisible(false);
         }
+        transaction.commit();
+        session.close();
         initListeAmi();
-//        List<DemandeAmi> demandesRecues = utilisateur.getDemandesRecues();
-//        DefaultListModel<String> demandesModel = new DefaultListModel<>();
-//        DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
-//
-//        // Parcourir la liste des demandes reçues et les ajouter au modèle de liste
-//        for (DemandeAmi demande : demandesRecues) {
-//            User demandeur = demande.getDemandeur();
-//            String statut = demande.getStatut().toString();
-//            if (statut.equals("EN_ATTENTE")) {
-//                demandesEnAttenteModel.addElement(demandeur.getPseudo());
-//            } else if (statut.equals("ACCEPTEE")) {
-//                demandesModel.addElement(demandeur.getPseudo());
-//            }// Supposons que vous avez une méthode getPseudo() dans la classe User
-//        }
-//        listamis.setModel(demandesModel);
-//        demandeamis.setModel(demandesEnAttenteModel);
+        
+
     }
 
-   public void initListeAmi() {
-    Session session = DBConnection.getSession();
-    Transaction transaction = session.beginTransaction();
-    User utilisateur = (User) session.get(User.class, u.getId());
-    List<DemandeAmi> demandesRecues = utilisateur.getDemandesRecues();
-    List<DemandeAmi> demandesEnvoy = utilisateur.getDemandesEnvoyees();
-    DefaultListModel<String> demandesModel = new DefaultListModel<>();
-    DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
+    public void initListeAmi() {
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
+        User utilisateur = (User) session.get(User.class, u.getId());
+        List<DemandeAmi> demandesRecues = utilisateur.getDemandesRecues();
+        List<DemandeAmi> demandesEnvoy = utilisateur.getDemandesEnvoyees();
+        DefaultListModel<String> demandesModel = new DefaultListModel<>();
+        DefaultListModel<String> demandesEnAttenteModel = new DefaultListModel<>();
 
-    // Vérifier si la liste des demandes reçues est vide
-    if (demandesRecues != null && !demandesRecues.isEmpty()) {
-        // Parcourir la liste des demandes reçues et les ajouter au modèle de liste
-        for (DemandeAmi demande : demandesRecues) {
-            User demandeur = demande.getDemandeur();
-            String statut = demande.getStatut().toString();
-            if (statut.equals("EN_ATTENTE")) {
-                demandesEnAttenteModel.addElement(demandeur.getPseudo());
-            } else if (statut.equals("ACCEPTEE")) {
-                demandesModel.addElement(demandeur.getPseudo());
-                if (!demandesModel.contains(demandeur.getPseudo())) {
+        // Vérifier si la liste des demandes reçues est vide
+        if (demandesRecues != null && !demandesRecues.isEmpty()) {
+            // Parcourir la liste des demandes reçues et les ajouter au modèle de liste
+            for (DemandeAmi demande : demandesRecues) {
+                User demandeur = demande.getDemandeur();
+                String statut = demande.getStatut().toString();
+                if (statut.equals("EN_ATTENTE")) {
+                    demandesEnAttenteModel.addElement(demandeur.getPseudo());
+                } else if (statut.equals("ACCEPTEE")) {
                     demandesModel.addElement(demandeur.getPseudo());
+                    if (!demandesModel.contains(demandeur.getPseudo())) {
+                        demandesModel.addElement(demandeur.getPseudo());
+                    }
                 }
             }
         }
-    }
-    if (demandesEnvoy != null && !demandesEnvoy.isEmpty()) {
-        // Parcourir la liste des demandes envoyées et les ajouter au modèle de liste
-        for (DemandeAmi demande : demandesEnvoy) {
-            User destinataire = demande.getDestinataire();
-            String statut = demande.getStatut().toString();
-            if (statut.equals("EN_ATTENTE") && destinataire.equals(utilisateur)) {
-                if (!demandesEnAttenteModel.contains(destinataire.getPseudo())) {
-                    demandesEnAttenteModel.addElement(destinataire.getPseudo());
-                }
-            } else if (statut.equals("ACCEPTEE")) {
-                if (!demandesModel.contains(destinataire.getPseudo())) {
-                    demandesModel.addElement(destinataire.getPseudo());
+        if (demandesEnvoy != null && !demandesEnvoy.isEmpty()) {
+            // Parcourir la liste des demandes envoyées et les ajouter au modèle de liste
+            for (DemandeAmi demande : demandesEnvoy) {
+                User destinataire = demande.getDestinataire();
+                String statut = demande.getStatut().toString();
+                if (statut.equals("EN_ATTENTE") && destinataire.equals(utilisateur)) {
+                    if (!demandesEnAttenteModel.contains(destinataire.getPseudo())) {
+                        demandesEnAttenteModel.addElement(destinataire.getPseudo());
+                    }
+                } else if (statut.equals("ACCEPTEE")) {
+                    if (!demandesModel.contains(destinataire.getPseudo())) {
+                        demandesModel.addElement(destinataire.getPseudo());
+                    }
                 }
             }
         }
+        
+        listamis.setModel(demandesModel);
+        demandeamis.setModel(demandesEnAttenteModel);
+        transaction.commit();
+        session.close();
+        
     }
-
-    listamis.setModel(demandesModel);
-    demandeamis.setModel(demandesEnAttenteModel);
-}
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -211,6 +206,7 @@ public class Profil extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         tpath = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        rechamisbutton1 = new javax.swing.JButton();
         backgris1 = new javax.swing.JPanel();
         listamistext = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -251,7 +247,7 @@ public class Profil extends javax.swing.JFrame {
                 rechamisbuttonActionPerformed(evt);
             }
         });
-        backblue.add(rechamisbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 70, 248, 54));
+        backblue.add(rechamisbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, 248, 54));
 
         exitCurseur.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         exitCurseur.setForeground(new java.awt.Color(255, 255, 255));
@@ -295,6 +291,16 @@ public class Profil extends javax.swing.JFrame {
             }
         });
         backblue.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, -1, -1));
+
+        rechamisbutton1.setBackground(new java.awt.Color(255, 255, 255));
+        rechamisbutton1.setText("Deconnexion");
+        rechamisbutton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        rechamisbutton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rechamisbutton1ActionPerformed(evt);
+            }
+        });
+        backblue.add(rechamisbutton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 70, 248, 54));
 
         getContentPane().add(backblue, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1490, 180));
 
@@ -383,6 +389,7 @@ public class Profil extends javax.swing.JFrame {
     private void mesportsbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mesportsbuttonActionPerformed
         ModifSport m = new ModifSport(this.u);
         m.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_mesportsbuttonActionPerformed
 
     private void rechamisbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechamisbuttonActionPerformed
@@ -428,10 +435,12 @@ public class Profil extends javax.swing.JFrame {
             Path path = Paths.get(tpath.getText());
             try {
                 byte[] photoData = Files.readAllBytes(path);
-                User currentUser = u;
-                currentUser.setPhotoProfil(photoData);
+                
+                
                 Session s = DBConnection.getSession();
                 Transaction transaction = s.beginTransaction();
+                User currentUser = (User) s.get(User.class, u.getId());
+                currentUser.setPhotoProfil(photoData);
                 s.update(currentUser);
 
                 // Validez et terminez la transaction
@@ -447,7 +456,7 @@ public class Profil extends javax.swing.JFrame {
                 Logger.getLogger(Profil.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            // Obtenez l'utilisateur actuellement connecté (supposons que vous avez une variable currentUser contenant l'utilisateur actuellement connecté)
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -533,7 +542,7 @@ public class Profil extends javax.swing.JFrame {
 //                        s.update(demandeAmi);
                         t.commit();
                         s.close();
-                        JOptionPane.showMessageDialog(this, "Demande d'ami refusee de " +pseudoSelectionne, "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Demande d'ami refusee de " + pseudoSelectionne, "PerforMates", JOptionPane.INFORMATION_MESSAGE);
 //                        System.out.println("Demande d'ami refusée pour " + pseudoSelectionne);
                         initListeAmi();
                     }
@@ -542,6 +551,15 @@ public class Profil extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_demandeamisMouseClicked
+
+    private void rechamisbutton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechamisbutton1ActionPerformed
+        if(JOptionPane.showConfirmDialog(this, "voulez vous vous deconnectez ", "ta", 2, JOptionPane.YES_NO_CANCEL_OPTION)==JOptionPane.YES_OPTION){
+        this.dispose();
+        Connexion c = new Connexion();
+        c.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_rechamisbutton1ActionPerformed
     private void openSportInterface(String sportName) {
         // Ouvrez l'interface correspondante en fonction du nom du sport
         switch (sportName) {
@@ -552,6 +570,8 @@ public class Profil extends javax.swing.JFrame {
                 User utilisa = (User) sis.get(User.class, u.getId());
                 RunningInterf courseAPiedInterface = new RunningInterf(utilisa);
                 courseAPiedInterface.setVisible(true);
+                tttii.commit();
+                sis.close();
                 break;
             case "Natation":
                 // Ouvrez l'interface pour le sport Natation
@@ -560,6 +580,8 @@ public class Profil extends javax.swing.JFrame {
                 User utilis = (User) siss.get(User.class, u.getId());
                 NatationInterface natationInterface = new NatationInterface(utilis);
                 natationInterface.setVisible(true);
+                ttti.commit();
+                siss.close();
                 break;
             case "Cyclisme":
                 // Ouvrez l'interface pour le sport Cyclisme
@@ -568,11 +590,18 @@ public class Profil extends javax.swing.JFrame {
                 User utilisateur = (User) session.get(User.class, u.getId());
                 CyclismeInterf cyclismeInterf = new CyclismeInterf(utilisateur);
                 cyclismeInterf.setVisible(true);
+                transaction.commit();
+                session.close();
                 break;
 
             case "Tennis":
-                TennisInterface t = new TennisInterface();
+                Session session1 = DBConnection.getSession();
+                Transaction transaction1 = session1.beginTransaction();
+                User utilisateur1 = (User) session1.get(User.class, u.getId());
+                TennisInterface t = new TennisInterface(utilisateur1);
                 t.setVisible(true);
+                transaction1.commit();
+                session1.close();
                 break;
 
             case "Windsurf":
@@ -582,7 +611,8 @@ public class Profil extends javax.swing.JFrame {
                 User utili = (User) s.get(User.class, u.getId());
                 WindSurfInterface c = new WindSurfInterface(utili);
                 c.setVisible(true);
-
+                ttt.commit();
+                s.close();
                 break;
             case "Haltérophilie":
                 Session si = DBConnection.getSession();
@@ -652,6 +682,7 @@ public class Profil extends javax.swing.JFrame {
     private javax.swing.JButton mesportsbutton;
     private javax.swing.JLabel nomprenom;
     private javax.swing.JButton rechamisbutton;
+    private javax.swing.JButton rechamisbutton1;
     private javax.swing.JButton sportbutton1;
     private javax.swing.JButton sportbutton2;
     private javax.swing.JButton sportbutton3;

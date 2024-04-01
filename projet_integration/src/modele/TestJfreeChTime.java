@@ -66,7 +66,7 @@ public class TestJfreeChTime extends JFrame {
 
                 for (Performances p : sortedPerformances) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
-                    if (p.getSport() instanceof Cyclisme) {
+                    if (p.getSport().estCyclisme()) {
                     double value = isDistance ? ((Cyclisme) p.getSport()).getDistanceTotaleParcourue() : ((Cyclisme) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
@@ -165,7 +165,7 @@ public class TestJfreeChTime extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
-                    if (p.getSport() instanceof Cyclisme) {
+                    if (p.getSport().estCyclisme()) {
                     double value = isDistance ? ((Cyclisme) p.getSport()).getDistanceTotaleParcourue() : ((Cyclisme) p.getSport()).getTempsPerformance();
                     Date date = p.getDate();
                     String formattedDate = dateFormat.format(date);
@@ -235,7 +235,7 @@ public class TestJfreeChTime extends JFrame {
     private boolean pratiqueCyclisme(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
-            if (sport instanceof Cyclisme) {
+            if (sport.estCyclisme()) {
                 return true;
             }
         }
@@ -265,7 +265,7 @@ public class TestJfreeChTime extends JFrame {
                 isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                 dataset, // Ensemble de données
                 PlotOrientation.VERTICAL,// Orientation du graphique (horizontal)
-                false, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                true , // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
                 true, // Inclure les tooltips
                 true // Inclure les URLs
         );
@@ -290,7 +290,7 @@ public class TestJfreeChTime extends JFrame {
                                 isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                                 dataset2, // Ensemble de données
                                 PlotOrientation.VERTICAL,// Orientation du graphique (horizontal)
-                                false, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
+                                true, // Inclure la légende (nous ne l'incluons pas pour éviter un warning)
                                 true, // Inclure les tooltips
                                 true // Inclure les URLs
                         );
@@ -316,7 +316,7 @@ public class TestJfreeChTime extends JFrame {
                         isDistance ? "Distance Parcourue(km)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                         initialDataset, // Ensemble de données initial
                         PlotOrientation.VERTICAL,// Orientation du graphique (horizontal)
-                        false, // Inclure la légende
+                        true, // Inclure la légende
                         true, // Inclure les tooltips
                         true // Inclure les URLs
                 );

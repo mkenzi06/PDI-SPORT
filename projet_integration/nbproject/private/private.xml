@@ -3,20 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseCap.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/DBConnection.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/CamembertNatation.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/NatationInterface.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/JfreeChCap.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/VitesseCyclisme.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/CourseAPied.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/RunningInterf.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Sport.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/User.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/CyclismeInterf.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/TestJfreeChTime.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/WindSurfInterface.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Connexion.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Profil.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/Inscription.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Natation.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/ModifSport.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/TennisInterface.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/CamembertTennis.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/DataInit.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/Tennis.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/modele/User.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/projet_integration/src/vues/AjoutAmi.java</file>
         </group>
     </open-files>
 </project-private>

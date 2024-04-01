@@ -68,6 +68,34 @@ public class Natation extends Sport {
     public void setTotalSessionTime(int totalSessionTime) {
         this.totalSessionTime = totalSessionTime;
     }
+        @Override
+    public boolean estCyclisme() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
 
+    @Override
+    public boolean estTennis() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estWindsurf() {
+       return false;//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estHalterophilie() {
+       return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estNatation() {
+        return true; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estCap() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

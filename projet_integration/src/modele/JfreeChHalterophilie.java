@@ -66,7 +66,7 @@ public class JfreeChHalterophilie extends JFrame{
 
                 for (Performances p : sortedPerformances) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
-                    if (p.getSport() instanceof Halterophilie) {
+                    if (p.getSport().estHalterophilie()) {
                         double value = isDistance ? ((Halterophilie) p.getSport()).getPoidsLeve() : ((Halterophilie) p.getSport()).getNombreRepetitions();
                         Date date = p.getDate();
                         String formattedDate = dateFormat.format(date);
@@ -165,7 +165,7 @@ public class JfreeChHalterophilie extends JFrame{
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
-                    if (p.getSport() instanceof Halterophilie) {
+                    if (p.getSport().estHalterophilie()) {
                         
                         double value = isDistance ? ((Halterophilie) p.getSport()).getPoidsLeve() : ((Halterophilie) p.getSport()).getNombreRepetitions();
                         Date date = p.getDate();
@@ -236,7 +236,7 @@ public class JfreeChHalterophilie extends JFrame{
     private boolean pratiqueCyclisme(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
-            if (sport instanceof Halterophilie) {
+            if (sport.estHalterophilie()) {
                 return true;
             }
         }
@@ -246,7 +246,7 @@ public class JfreeChHalterophilie extends JFrame{
     private User u;
 
     public JfreeChHalterophilie(final User u, final boolean isDistance) {
-        setTitle("Performances Cyclisme");
+        setTitle("Performances Halterophilie");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(800, 600);
@@ -286,7 +286,7 @@ public class JfreeChHalterophilie extends JFrame{
                         Transaction transaction = session.beginTransaction();
                         User user = (User) session.get(User.class, us.getId());
                         DefaultCategoryDataset dataset2 = createDataset2(u, user); // Mettre à jour le dataset avec les deux utilisateurs
-                        JFreeChart chart1 = ChartFactory.createAreaChart("Performances Halterophilie", // Titre du graphique
+                        JFreeChart chart1 = ChartFactory.createBarChart("Performances Halterophilie", // Titre du graphique
                                 "Date", // Libellé de l'axe des catégories (horizontal)
                                 isDistance ? "Poids souleves(kg)" : "Temps Performance(min)", // Libellé de l'axe des valeurs (vertical)
                                 dataset2, // Ensemble de données

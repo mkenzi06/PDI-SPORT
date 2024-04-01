@@ -5,7 +5,23 @@
  */
 package vues;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modele.CamembertNatation;
+import modele.CamembertTennis;
+import modele.Cyclisme;
+import modele.DBConnection;
+import modele.Natation;
+import modele.Performances;
+import modele.User;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import modele.Tennis;
 
 /**
  *
@@ -16,10 +32,56 @@ public class TennisInterface extends javax.swing.JFrame {
     /**
      * Creates new form Tennis
      */
-    public TennisInterface() {
+    private User u;
+
+    public TennisInterface(User u) {
         initComponents();
-         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
+        this.u = u;
+        afficheTable();
+    }
+
+    private TennisInterface() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void afficheTable() {
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
+        User utilisateur = (User) session.get(User.class, u.getId());
+//        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
+        List<Performances> performancesUtilisateur = utilisateur.getPerformances();
+
+// Créer un tableau pour stocker les performances spécifiques au cyclisme
+        List<Performances> performances = new ArrayList<>();
+
+// Filtrer les performances pour ne garder que celles liées au cyclisme
+        for (Performances performance : performancesUtilisateur) {
+            if (performance.getSport().estTennis()) {
+                performances.add(performance);
+            }
+        }
+
+        // Create a table model to display the performances
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Date");
+        model.addColumn("Sets gagnes");
+        model.addColumn("Sets totale dans le match");
+
+        for (Performances performance : performances) {
+            Object[] row = new Object[3];
+            row[0] = performance.getDate();
+            row[1] = ((Tennis) performance.getSport()).getNombreSetsGagnes();
+            row[2] = ((Tennis) performance.getSport()).getNombresetsmatch();
+            model.addRow(row);
+        }
+
+        jTable1.setModel(model);
+
+        transaction.commit();
+        session.close();
+
     }
 
     /**
@@ -32,31 +94,160 @@ public class TennisInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jCalendar1 = new com.toedter.calendar.JCalendar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setText("TENNIS");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 30, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jLabel1)
-                .addContainerGap(163, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel1)
-                .addContainerGap(238, Short.MAX_VALUE))
-        );
+        jLabel2.setText("Nombre de sets gagnes : ");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, -1));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, 110, -1));
+
+        jLabel3.setText("Nombre de sets joue dans le match : ");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
+        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 150, 80, -1));
+
+        jLabel4.setText("Jour du match :");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
+        getContentPane().add(jCalendar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, -1, -1));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 90, -1, 210));
+
+        jButton1.setText("Ajouter perf");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 200, -1, -1));
+
+        jButton2.setText("Afficher en camembert");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
+
+        // Vérifier si une date future est saisie
+        if (jCalendar1.getDate().after(new Date())) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Vérifier si une performance existe déjà à cette date pour l'utilisateur
+        User utilisateur = (User) session.get(User.class, u.getId());
+        Date selectedDate = jCalendar1.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String selectedDateString = sdf.format(jCalendar1.getDate());
+
+        // Comparer avec la date existante
+        Performances existingPerformance = null;
+        for (Performances performance : utilisateur.getPerformances()) {
+            String existingDateString = sdf.format(performance.getDate());
+            if (existingDateString.equals(selectedDateString) && performance.getSport().estTennis()) {
+                existingPerformance = performance;
+                break;
+            }
+        }
+
+        if (existingPerformance != null) {
+            // Demander à l'utilisateur s'il souhaite modifier la performance existante
+            int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                // Mettre à jour les valeurs de la performance existante
+                Tennis c = (Tennis) existingPerformance.getSport();
+                c.setNombreSetsGagnes(Integer.parseInt(jTextField1.getText()));
+                c.setNombresetsmatch(Integer.parseInt(jTextField2.getText()));
+                existingPerformance.setDate(selectedDate);
+                session.update(c);
+                session.update(existingPerformance);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                afficheTable();
+                return;
+            }else{
+                return;
+            }
+        }
+
+        // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
+        if (jTextField1.getText().isEmpty() || jTextField2.getText().isEmpty() || Integer.parseInt(jTextField1.getText()) < 0 || Integer.parseInt(jTextField2.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        } else {
+            Tennis c = new Tennis();
+            c.setNombreSetsGagnes(Integer.parseInt(jTextField1.getText()));
+            c.setNombresetsmatch(Integer.parseInt(jTextField2.getText()));
+            session.persist(c);
+
+            Performances p = new Performances();
+            p.setUser(utilisateur);
+            p.setSport(c);
+            p.setDate(selectedDate);
+            session.persist(p);
+
+            utilisateur.getPerformances().add(p);
+            transaction.commit();
+            session.close();
+            JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+            afficheTable();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une ligne dans la table.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Date selectedDate = (Date) jTable1.getValueAt(selectedRow, 0);
+        CamembertTennis c = new CamembertTennis(u, selectedDate);
+        c.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -95,6 +286,16 @@ public class TennisInterface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

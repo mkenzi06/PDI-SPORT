@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package modele;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -16,10 +17,22 @@ import javax.persistence.*;
 //@MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Sport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
+    @ManyToMany(mappedBy = "sportsPratiques")
+    private List<User> users = new ArrayList<>();
+
+    // Getters et setters pour `users`
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     /**
      * @return the id
@@ -39,6 +52,20 @@ public abstract class Sport {
      * @return the nom
      */
     public abstract String getNom();
+//
+
+    public abstract boolean estCyclisme();
+
+    public abstract boolean estTennis();
+
+    public abstract boolean estWindsurf();
+//
+
+    public abstract boolean estHalterophilie();
+
+    public abstract boolean estNatation();
+
+    public abstract boolean estCap();
 
     /**
      * @param nom the nom to set
@@ -50,5 +77,4 @@ public abstract class Sport {
     /**
      * @return the performances
      */
-
 }

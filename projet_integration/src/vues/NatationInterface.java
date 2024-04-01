@@ -5,6 +5,7 @@
  */
 package vues;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,9 @@ import org.hibernate.Transaction;
  * @author HP
  */
 public class NatationInterface extends javax.swing.JFrame {
+
     private User u;
+
     /**
      * Creates new form NatationInterface
      */
@@ -28,10 +31,11 @@ public class NatationInterface extends javax.swing.JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
-        this.u=us;
+        this.u = us;
         afficheTable();
-        
+
     }
+
     private void afficheTable() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -44,7 +48,7 @@ public class NatationInterface extends javax.swing.JFrame {
 
 // Filtrer les performances pour ne garder que celles liées au cyclisme
         for (Performances performance : performancesUtilisateur) {
-            if (performance.getSport() instanceof Natation) {
+            if (performance.getSport().estNatation()) {
                 performances.add(performance);
             }
         }
@@ -64,17 +68,16 @@ public class NatationInterface extends javax.swing.JFrame {
             model.addRow(row);
         }
 
-        
         jTable2.setModel(model);
-        
+
         transaction.commit();
         session.close();
-        
+
     }
+
     private NatationInterface() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -264,68 +267,86 @@ public class NatationInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_dparcourActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       Session session = DBConnection.getSession();
-Transaction transaction = session.beginTransaction();
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
 
-if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar1.getDate() == null || 
-    Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0 || 
-    jTextField2.getText().isEmpty() || Double.parseDouble(jTextField2.getText()) < 0) {
-    JOptionPane.showMessageDialog(this, "Erreur de saisie. Veuillez remplir tous les champs correctement.", "Erreur", JOptionPane.ERROR_MESSAGE);
-} else {
-    // Récupération de l'utilisateur
-    User utilisateur = (User) session.get(User.class, u.getId());
+        // Vérifier si une date future est saisie
+        if (jCalendar1.getDate().after(new Date())) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    // Récupération des valeurs des champs
-    
-    int totalSessionTime = Integer.parseInt(dparcour.getText());
-    double crawlPercentage = Double.parseDouble(jTextField1.getText());
-    double papillonPercentage = Double.parseDouble(jTextField2.getText());
+        // Récupérer l'utilisateur
+        User utilisateur = (User) session.get(User.class, u.getId());
+        Date selectedDate = jCalendar1.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String selectedDateString = sdf.format(jCalendar1.getDate());
 
-    // Vérification que les pourcentages de papillon et crawl ne dépassent pas le temps total de la séance
-    if (crawlPercentage + papillonPercentage > totalSessionTime || crawlPercentage > totalSessionTime || papillonPercentage > totalSessionTime) {
-        JOptionPane.showMessageDialog(this, "Les pourcentages de papillon et de crawl ne peuvent pas dépasser le temps total de la séance ni dépasser 100%.", "Erreur", JOptionPane.ERROR_MESSAGE);
-    } else {
-        // Création de l'objet Natation
-        Natation natation = new Natation();
-        natation.setCrawlTimePercentage(crawlPercentage);
-        natation.setPapillonTimePercentage(papillonPercentage);
-        natation.setTotalSessionTime(totalSessionTime);
+        // Vérifier si une performance existe déjà à cette date pour l'utilisateur
+//    Date selectedDate = jCalendar1.getDate();
+        Performances existingPerformance = null;
+        for (Performances performance : utilisateur.getPerformances()) {
+            String existingDateString = sdf.format(performance.getDate());
+            if (existingDateString.equals(selectedDateString) && performance.getSport().estNatation()) {
+                existingPerformance = performance;
+                break;
+            }
+        }
 
-        // Persiste l'objet Natation
-        session.persist(natation);
+        if (existingPerformance != null) {
+            // Demander à l'utilisateur s'il souhaite modifier la performance existante
+            int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                // Mettre à jour les valeurs de la performance existante
+                Natation natation = (Natation) existingPerformance.getSport();
+                natation.setCrawlTimePercentage(Double.parseDouble(jTextField1.getText()));
+                natation.setPapillonTimePercentage(Double.parseDouble(jTextField2.getText()));
+                natation.setTotalSessionTime(Integer.parseInt(dparcour.getText()));
+                existingPerformance.setDate(selectedDate);
+                session.update(existingPerformance);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                afficheTable();
+                return;
+            }else{
+                return;
+            }
+        }
 
-        // Création de l'objet Performances
-        Performances performances = new Performances();
-        performances.setUser(utilisateur);
-        performances.setSport(natation);
-        performances.setDate(jCalendar1.getDate());
+        // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
+        if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || jTextField2.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0 || Double.parseDouble(jTextField2.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        } else {
+            Natation natation = new Natation();
+            natation.setCrawlTimePercentage(Double.parseDouble(jTextField1.getText()));
+            natation.setPapillonTimePercentage(Double.parseDouble(jTextField2.getText()));
+            natation.setTotalSessionTime(Integer.parseInt(dparcour.getText()));
+            session.persist(natation);
 
-        // Persiste l'objet Performances
-        session.persist(performances);
+            Performances p = new Performances();
+            p.setUser(utilisateur);
+            p.setSport(natation);
+            p.setDate(selectedDate);
+            session.persist(p);
 
-        // Ajoute la performance à la liste de performances de l'utilisateur
-        utilisateur.getPerformances().add(performances);
-
-        // Commit de la transaction et fermeture de la session
-        transaction.commit();
-        session.close();
-
-        // Affichage du message de succès
-        JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-        afficheTable();
-    }
-}
+            utilisateur.getPerformances().add(p);
+            transaction.commit();
+            session.close();
+            JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+            afficheTable();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       int selectedRow = jTable2.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Veuillez sélectionner une ligne dans la table.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-       Date selectedDate = (Date) jTable2.getValueAt(selectedRow, 0);
-       ClasseCamembert c = new ClasseCamembert(u, selectedDate);
-       c.setVisible(true);
+        int selectedRow = jTable2.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une ligne dans la table.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Date selectedDate = (Date) jTable2.getValueAt(selectedRow, 0);
+        CamembertNatation c = new CamembertNatation(u, selectedDate);
+        c.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -335,7 +356,7 @@ if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */

@@ -47,4 +47,36 @@ public class WindSurf extends Sport {
     public String getNom() {
         return "Windsurf";
     }
+
+     @Override
+    public boolean estCyclisme() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estTennis() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estWindsurf() {
+       return true;//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estHalterophilie() {
+       return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estNatation() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estCap() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+ 
+    
 }

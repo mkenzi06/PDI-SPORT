@@ -48,7 +48,7 @@ public class User {
         this.sportsPratiques = sportsPratiques;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_sport",
             joinColumns = @JoinColumn(name = "user_id"),

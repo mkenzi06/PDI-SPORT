@@ -20,7 +20,7 @@ public class Performances {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sport_id")
     private Sport sport;
 

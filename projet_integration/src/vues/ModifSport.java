@@ -6,6 +6,7 @@
 package vues;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -15,10 +16,12 @@ import modele.Cyclisme;
 import modele.DBConnection;
 import modele.Halterophilie;
 import modele.Natation;
+import modele.Performances;
 import modele.Sport;
 import modele.Tennis;
 import modele.User;
 import modele.WindSurf;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -32,17 +35,29 @@ public class ModifSport extends javax.swing.JFrame {
      * Creates new form ModifSport
      */
     private User u;
-    private final List<String> sportsDisponibles = Arrays.asList("Cyclisme", "Tennis", "Natation", "Course à pied", "Windsurf", "Haltérophilie");
+    private final List<String> sportsDisponibles = Arrays.asList("Cyclisme", "Tennis", "Natation", "Course a pied", "Windsurf", "Haltérophilie");
 
     public ModifSport(User u) {
         initComponents();
         setLocationRelativeTo(this);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.u = u;
+        initData(u);
         afficheSport();
         chargerSportsDisponibles();
         updateBtnAjouterState();
 
+    }
+
+    private void initData(User u) {
+        Session s = DBConnection.getSession();
+        Transaction t = s.beginTransaction();
+        User u1 = (User) s.get(User.class, u.getId());
+        tnom.setText(u1.getNom());
+        tprenom.setText(u1.getPrenom());
+        tpseudo.setText(u1.getPseudo());
+        t.commit();
+        s.close();
     }
 
     private boolean aTropDeSports() {
@@ -109,13 +124,22 @@ public class ModifSport extends javax.swing.JFrame {
         jList2 = new javax.swing.JList<>();
         btnAjouter = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        tnom = new javax.swing.JTextField();
+        tprenom = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        tpseudo = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setText("Mes sports");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, -1, -1));
+        jLabel1.setText("Mes information");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, -1));
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -124,7 +148,7 @@ public class ModifSport extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 160, -1));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 280, 160, -1));
 
         jList2.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -133,7 +157,7 @@ public class ModifSport extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList2);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 80, 230, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 260, 230, -1));
 
         btnAjouter.setText("Ajouter");
         btnAjouter.addActionListener(new java.awt.event.ActionListener() {
@@ -141,7 +165,7 @@ public class ModifSport extends javax.swing.JFrame {
                 btnAjouterActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAjouter, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, 90, -1));
+        getContentPane().add(btnAjouter, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 350, 90, -1));
 
         jButton2.setText("Supprimer");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -149,7 +173,45 @@ public class ModifSport extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 280, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 380, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel2.setText("Mes sports");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
+        getContentPane().add(tnom, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 80, -1));
+        getContentPane().add(tprenom, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 70, -1));
+
+        jLabel3.setText("Prenom :");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
+
+        jLabel4.setText("Nom :");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, -1, -1));
+
+        jButton1.setText("Modifier");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, -1, -1));
+
+        tpseudo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tpseudoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(tpseudo, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 80, -1));
+
+        jLabel5.setText("Pseudo :");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, -1));
+
+        jButton3.setText("Profil");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 20, 100, 60));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -175,59 +237,164 @@ public class ModifSport extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String sportASupprimer = jList1.getSelectedValue();
-    if (sportASupprimer != null && !sportASupprimer.isEmpty()) {
-        DefaultListModel<String> model = (DefaultListModel<String>) jList1.getModel();
-        int selectedIndex = jList1.getSelectedIndex();
-        model.remove(selectedIndex); // Supprimer le sport de la JList
+        if (sportASupprimer != null && !sportASupprimer.isEmpty()) {
+            DefaultListModel<String> model = (DefaultListModel<String>) jList1.getModel();
+            int selectedIndex = jList1.getSelectedIndex();
+            model.remove(selectedIndex); // Supprimer le sport de la JList
 
-        supprimerSportUtilisateur(sportASupprimer); // Supprimer le sport de la base de données
+            supprimerSportUtilisateur(sportASupprimer); // Supprimer le sport de la base de données
 
-        updateBtnAjouterState(); // Mettre à jour l'état du bouton "Ajouter"
-    }
-    
+            updateBtnAjouterState(); // Mettre à jour l'état du bouton "Ajouter"
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
-   private void supprimerSportUtilisateur(String sportASupprimer) {
-    Session session = null;
-    try {
-        session = DBConnection.getSession();
+
+    private void tpseudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpseudoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tpseudoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-
-        // Récupérer l'utilisateur actuel
         User utilisateur = (User) session.get(User.class, u.getId());
+        if (!tnom.getText().isEmpty() || !tprenom.getText().isEmpty() || !tpseudo.getText().isEmpty()) {
+            String pseudoUtilisateurCourant = utilisateur.getPseudo();
 
-        // Rechercher le sport à supprimer dans la liste des sports de l'utilisateur
-        Sport sport = null;
-        for (Sport s : utilisateur.getSportsPratiques()) {
-            if (s.getNom().equals(sportASupprimer)) {
-                sport = s;
-                break;
+            if (!tpseudo.getText().equals(pseudoUtilisateurCourant)) {
+                // Vérifier si le nouveau pseudo existe déjà dans la base de données
+                long count = (long) session.createQuery("SELECT COUNT(*) FROM User WHERE pseudo = :pseudo")
+                        .setParameter("pseudo", tpseudo.getText())
+                        .uniqueResult();
+
+                if (count > 0) {
+                    JOptionPane.showMessageDialog(this, "Erreur : Ce pseudo est déjà utilisé.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            utilisateur.setNom(tnom.getText());
+            utilisateur.setPrenom(tprenom.getText());
+            utilisateur.setPseudo(tpseudo.getText());
+            session.update(utilisateur);
+            transaction.commit();
+            JOptionPane.showMessageDialog(this, "Données de l'utilisateur mises à jour avec succès !");
+            initData(utilisateur);
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Session session = DBConnection.getSession();
+        Transaction transaction = session.beginTransaction();
+        User utilisateur = (User) session.get(User.class, u.getId());
+        Profil p = new Profil(utilisateur);
+        p.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+//    private void supprimerSportUtilisateur(String sportASupprimer) {
+//        Session session = null;
+//        try {
+//            session = DBConnection.getSession();
+//            Transaction transaction = session.beginTransaction();
+//
+//            // Récupérer l'utilisateur actuel
+//            User utilisateur = (User) session.get(User.class, u.getId());
+//
+//            // Rechercher le sport à supprimer dans la liste des sports de l'utilisateur
+//            Sport sport = null;
+//            for (Sport s : utilisateur.getSportsPratiques()) {
+//                if (s.getNom().equals(sportASupprimer)) {
+//                    sport = s;
+//                    break;
+//                }
+//            }
+//
+//            if (sport != null) {
+//                utilisateur.getSportsPratiques().remove(sport); // Supprimer le sport de la liste de l'utilisateur
+//                session.delete(sport); // Supprimer le sport de la base de données
+//                JOptionPane.showMessageDialog(this, "Sport supprimé avec succès !");
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Le sport sélectionné n'existe pas dans la liste de l'utilisateur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//            }
+//
+//            // Mettre à jour l'utilisateur dans la base de données
+//            session.update(utilisateur);
+//
+//            // Valider la transaction
+//            transaction.commit();
+//        } catch (Exception e) {
+//            if (session != null) {
+//                session.getTransaction().rollback();
+//            }
+//            e.printStackTrace();
+//        } finally {
+//            if (session != null) {
+//                session.close();
+//            }
+//        }
+//    }
+
+    private void supprimerSportUtilisateur(String sportASupprimer) {
+        Session session = null;
+        try {
+            session = DBConnection.getSession();
+            Transaction transaction = session.beginTransaction();
+
+            // Récupérer l'utilisateur actuel
+            User utilisateur = (User) session.get(User.class, u.getId());
+
+            // Rechercher le sport à supprimer dans la liste des sports de l'utilisateur
+            Sport sport = null;
+            for (Sport s : utilisateur.getSportsPratiques()) {
+                if (s.getNom().equals(sportASupprimer)) {
+                    sport = s;
+                    break;
+                }
+            }
+
+            if (sport != null) {
+                // Supprimer les performances associées au sport
+                System.out.println("vues.ModifSport.supprimerSportUtilisateur() debbug ");
+                Iterator<Performances> iterator = utilisateur.getPerformances().iterator();
+                while (iterator.hasNext()) {
+                    Performances performance = iterator.next();
+                    if (performance.getSport().getNom().equals(sportASupprimer)) {
+                        iterator.remove(); // Use iterator's remove method
+                        session.delete(performance);
+                    }
+                }
+//                if (sport.estCyclisme()) {
+//                    // Supprimer toutes les instances de Cyclisme une par une
+//                    List<Cyclisme> cyclismes = session.createQuery("FROM Cyclisme WHERE id = :sportId")
+//                            .setParameter("sportId", sport.getId())
+//                            .list();
+//                    for (Cyclisme cyclisme : cyclismes) {
+//                        session.delete(cyclisme);
+//                    }
+//                }
+                utilisateur.getSportsPratiques().remove(sport); // Supprimer le sport de la liste de l'utilisateur
+                session.delete(sport); // Supprimer le sport de la base de données
+                JOptionPane.showMessageDialog(this, "Sport supprimé avec succès !");
+            } else {
+                JOptionPane.showMessageDialog(this, "Le sport sélectionné n'existe pas dans la liste de l'utilisateur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+
+            // Mettre à jour l'utilisateur dans la base de données
+            session.update(utilisateur);
+
+            // Valider la transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (session != null) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
-
-        if (sport != null) {
-            utilisateur.getSportsPratiques().remove(sport); // Supprimer le sport de la liste de l'utilisateur
-            session.delete(sport); // Supprimer le sport de la base de données
-            JOptionPane.showMessageDialog(this, "Sport supprimé avec succès !");
-        } else {
-            JOptionPane.showMessageDialog(this, "Le sport sélectionné n'existe pas dans la liste de l'utilisateur.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
-
-        // Mettre à jour l'utilisateur dans la base de données
-        session.update(utilisateur);
-
-        // Valider la transaction
-        transaction.commit();
-    } catch (Exception e) {
-        if (session != null) {
-            session.getTransaction().rollback();
-        }
-        e.printStackTrace();
-    } finally {
-        if (session != null) {
-            session.close();
-        }
     }
-}
+
     private void ajouterSportUtilisateur(String sportChoisi) {
         Session session = null;
         try {
@@ -238,7 +405,6 @@ public class ModifSport extends javax.swing.JFrame {
             User utilisateur = (User) session.get(User.class, u.getId());
 
             // Vérifier le type de sport choisi
-            
             switch (sportChoisi) {
                 case "Cyclisme":
                     Cyclisme s = new Cyclisme();
@@ -256,7 +422,7 @@ public class ModifSport extends javax.swing.JFrame {
                     utilisateur.getSportsPratiques().add(h);
                     session.persist(h);
                     break;
-                case "Course à pied":
+                case "Course a pied":
                     CourseAPied cap = new CourseAPied();
                     utilisateur.getSportsPratiques().add(cap);
                     session.persist(cap);
@@ -276,11 +442,9 @@ public class ModifSport extends javax.swing.JFrame {
                     break;
             }
 
-            
+            // Mettre à jour l'utilisateur dans la base de données
+            session.update(utilisateur);
 
-                // Mettre à jour l'utilisateur dans la base de données
-                session.update(utilisateur);
-            
             JOptionPane.showMessageDialog(this, "nouveau sport !!");
             // Valider la transaction
             transaction.commit();
@@ -333,11 +497,20 @@ public class ModifSport extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAjouter;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField tnom;
+    private javax.swing.JTextField tprenom;
+    private javax.swing.JTextField tpseudo;
     // End of variables declaration//GEN-END:variables
 }

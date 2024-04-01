@@ -59,7 +59,7 @@ public class VitesseCap extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : sortedPerformances) {
-                    if (p.getSport() instanceof CourseAPied) {
+                    if (p.getSport().estCap()) {
                     // Utilisez isDistance pour décider quel attribut extraire des performances
                     double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
                     double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
@@ -92,7 +92,7 @@ public class VitesseCap extends JFrame {
     private boolean pratiqueCyclisme(User user) {
 
         for (Sport sport : user.getSportsPratiques()) {
-            if (sport instanceof CourseAPied) {
+            if (sport.estCap()) {
                 return true;
             }
         }
@@ -171,7 +171,7 @@ public class VitesseCap extends JFrame {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                 for (Performances p : mergedPerformances) {
-                    if (p.getSport() instanceof CourseAPied) {
+                    if (p.getSport().estCap()) {
                     double distance = ((CourseAPied) p.getSport()).getDistanceParcourue();
                     double temps = ((CourseAPied) p.getSport()).getTempsPerformance();
                     double speed = distance / temps;

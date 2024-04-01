@@ -5,7 +5,9 @@
  */
 package vues;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -33,7 +35,7 @@ public class RunningInterf extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(this);
         this.u = us;
-        affichedonne();
+        
         afficheTable();
     }
     
@@ -41,22 +43,6 @@ public class RunningInterf extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void affichedonne() {
-//        jLabel6.setText(u.getNom());
-        Session session = DBConnection.getSession();
-        Transaction transaction = session.beginTransaction();
-        User utilisateur = (User) session.get(User.class, u.getId());
-        List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-        for (Sport sport : sportsPratiques) {
-            if (sport instanceof CourseAPied) {
-                CourseAPied cyclisme = (CourseAPied) sport;
-//                dparcour.setText(String.valueOf(cyclisme.getDistanceTotaleParcourue()));
-//                ttemps.setText(String.valueOf(cyclisme.getTempsPerformance()));
-            }
-        }
-        transaction.commit();
-        session.close();
-    }
     
     private void afficheTable() {
         Session session = DBConnection.getSession();
@@ -70,7 +56,7 @@ public class RunningInterf extends javax.swing.JFrame {
 
 // Filtrer les performances pour ne garder que celles liées au cyclisme
         for (Performances performance : performancesUtilisateur) {
-            if (performance.getSport() instanceof CourseAPied) {
+            if (performance.getSport().estCap()) {
                 performancesC.add(performance);
             }
         }
@@ -123,7 +109,7 @@ public class RunningInterf extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel1.setText("CYCLISME");
+        jLabel1.setText("Course a pied");
 
         jLabel2.setText("Distance parcourue:");
 
@@ -184,7 +170,7 @@ public class RunningInterf extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 945, Short.MAX_VALUE)
+            .addGap(0, 957, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -277,62 +263,76 @@ public class RunningInterf extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-        if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar1.getDate() == null || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
-            JOptionPane.showMessageDialog(this, "ERREUR", "ERREUR", JOptionPane.ERROR_MESSAGE);
+
+        // Vérifier si une date future est saisie
+        if (jCalendar1.getDate().after(new Date())) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Vérifier si une performance existe déjà à cette date pour l'utilisateur
+        User utilisateur = (User) session.get(User.class, u.getId());
+        Date selectedDate = jCalendar1.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String selectedDateString = sdf.format(jCalendar1.getDate());
+
+        // Comparer avec la date existante
+        
+        Performances existingPerformance = null;
+        for (Performances performance : utilisateur.getPerformances()) {
+            String existingDateString = sdf.format(performance.getDate());
+            if (existingDateString.equals(selectedDateString) && performance.getSport().estCap()) {
+                existingPerformance = performance;
+                break;
+            }
+        }
+
+        if (existingPerformance != null) {
+            // Demander à l'utilisateur s'il souhaite modifier la performance existante
+            int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                // Mettre à jour les valeurs de la performance existante
+                CourseAPied cap = (CourseAPied) existingPerformance.getSport();
+                cap.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
+                cap.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
+                existingPerformance.setDate(selectedDate);
+                session.update(cap);
+                session.update(existingPerformance);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                afficheTable();
+                return;
+            }else{
+                return;
+            }
+        }
+
+        // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
+        if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
         } else {
-            User utilisateur = (User) session.get(User.class, u.getId());
             CourseAPied c = new CourseAPied();
             c.setDistanceParcourue(Double.parseDouble(dparcour.getText()));
             c.setTempsPerformance(Double.parseDouble(jTextField1.getText()));
             session.persist(c);
-            
+
             Performances p = new Performances();
             p.setUser(utilisateur);
             p.setSport(c);
-            p.setDate(jCalendar1.getDate());
+            p.setDate(selectedDate);
             session.persist(p);
-            
-            utilisateur.getPerformances().add(p); // Ajoutez la performance à la liste de performances de l'utilisateur
 
+            utilisateur.getPerformances().add(p);
             transaction.commit();
             session.close();
-            //            JOptionPane.showMessageDialog(this, "Ajout de la perforMance !", "PerforMates", JOptionPane.INFORMATION_MESSAGE);
-
-            //            User utilisateur = (User) session.get(User.class, u.getId());
-            //            Cyclisme c = new Cyclisme();
-            //            c.setDistanceTotaleParcourue((Double) Double.parseDouble(dparcour.getText()));
-            //            c.setTempsPerformance((Double) Double.parseDouble(ttemps.getText()));
-            //            session.persist(c);
-            //
-            //            List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-            //            sportsPratiques.add(c);
-            //            Performances p = new Performances();
-            //            p.setUser(utilisateur);
-            //            p.setSport(c);
-            //            Date datePerformance = jCalendar1.getDate();
-            //            p.setDate(datePerformance);
-            //            session.persist(p);
-            //            utilisateur.getPerformances().add(p);
-            //            c.getPerformances().add(p);
-            //            transaction.commit();
-            //            session.close();
-            JOptionPane.showMessageDialog(this, "Ajout de la perforMance !", "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
             afficheTable();
+        }
 
-            //            List<Sport> sportsPratiques = utilisateur.getSportsPratiques();
-            //            for (Sport sport : sportsPratiques) {
-            //                if (sport instanceof Cyclisme) {
-            //                    Cyclisme cyclisme = (Cyclisme) sport;
-            //                    cyclisme.setDistanceTotaleParcourue(Float.parseFloat(dparcour.getText()));
-            //                    cyclisme.setTempsPerformance(Double.valueOf(ttemps.getText()));
-            //                    session.update(cyclisme);
-            //                    transaction.commit();
-            //                    JOptionPane.showMessageDialog(this, "Mise a jour avec succes !","PerforMates",JOptionPane.INFORMATION_MESSAGE);
-            //                    session.close();
-            //                }
-            //            }
+
     }//GEN-LAST:event_jButton1ActionPerformed
-    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 //        TestJfreeChTime tj = new TestJfreeChTime(this.u, true);
 //        tj.setVisible(true);

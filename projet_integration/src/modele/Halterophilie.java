@@ -48,5 +48,34 @@ public class Halterophilie extends Sport {
     public String getNom() {
         return "Haltérophilie";
     }
+        @Override
+    public boolean estCyclisme() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estTennis() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estWindsurf() {
+       return false;//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estHalterophilie() {
+       return true; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estNatation() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estCap() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
 }
 

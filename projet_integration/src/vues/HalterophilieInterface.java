@@ -5,7 +5,9 @@
  */
 package vues;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,10 +42,10 @@ public class HalterophilieInterface extends javax.swing.JFrame {
         afficheTable();
     }
 
-   
     private HalterophilieInterface() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
     private void afficheTable() {
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
@@ -56,7 +58,7 @@ public class HalterophilieInterface extends javax.swing.JFrame {
 
 // Filtrer les performances pour ne garder que celles liées au cyclisme
         for (Performances performance : performancesUtilisateur) {
-            if (performance.getSport() instanceof Halterophilie) {
+            if (performance.getSport().estHalterophilie()) {
                 performancesCyclisme.add(performance);
             }
         }
@@ -76,10 +78,10 @@ public class HalterophilieInterface extends javax.swing.JFrame {
 
         // Set the table model to the JTable
         jTable2.setModel(model);
-        
+
         transaction.commit();
         session.close();
-        
+
     }
 
     /**
@@ -162,6 +164,9 @@ public class HalterophilieInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(192, 192, 192)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
@@ -178,23 +183,20 @@ public class HalterophilieInterface extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(323, 323, 323)
                         .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(99, 99, 99))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addGap(99, 99, 99))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(512, 584, Short.MAX_VALUE)
-                            .addComponent(jButton3)))
-                    .addGap(0, 25, Short.MAX_VALUE)))
+                    .addContainerGap(468, Short.MAX_VALUE)
+                    .addComponent(jButton3)
+                    .addGap(0, 141, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,20 +213,18 @@ public class HalterophilieInterface extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addGap(58, 58, 58))))
+                .addGap(18, 18, 18)
+                .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(58, 58, 58))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addContainerGap(25, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(86, 86, 86)
+                    .addContainerGap(365, Short.MAX_VALUE)
                     .addComponent(jButton3)
                     .addGap(0, 9, Short.MAX_VALUE)))
         );
@@ -239,10 +239,51 @@ public class HalterophilieInterface extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Session session = DBConnection.getSession();
         Transaction transaction = session.beginTransaction();
-        if (jTextField1.getText().isEmpty() || dparcour.getText().isEmpty() || jCalendar1.getDate() == null || Integer.parseInt(dparcour.getText()) < 0 || Integer.parseInt(jTextField1.getText()) < 0) {
-            JOptionPane.showMessageDialog(this, "ERREUR", "ERREUR", JOptionPane.ERROR_MESSAGE);
+        if (jCalendar1.getDate().after(new Date())) {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une date valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Vérifier si une performance existe déjà à cette date pour l'utilisateur
+        User utilisateur = (User) session.get(User.class, u.getId());
+        Date selectedDate = jCalendar1.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String selectedDateString = sdf.format(jCalendar1.getDate());
+
+        // Comparer avec la date existante
+        Performances existingPerformance = null;
+        for (Performances performance : utilisateur.getPerformances()) {
+            String existingDateString = sdf.format(performance.getDate());
+            if (existingDateString.equals(selectedDateString) && performance.getSport().estHalterophilie()) {
+                existingPerformance = performance;
+                break;
+            }
+        }
+        if (existingPerformance != null) {
+            // Demander à l'utilisateur s'il souhaite modifier la performance existante
+            int choice = JOptionPane.showConfirmDialog(this, "Une performance existe déjà à cette date. Voulez-vous la modifier ?", "Performance existante", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                // Mettre à jour les valeurs de la performance existante
+                Halterophilie c = (Halterophilie) existingPerformance.getSport();
+                c.setPoidsLeve(Integer.parseInt(dparcour.getText()));
+                c.setNombreRepetitions(Integer.parseInt(jTextField1.getText()));
+                existingPerformance.setDate(selectedDate);
+                session.update(c);
+                session.update(existingPerformance);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this, "Performance mise à jour avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                afficheTable();
+                return;
+            }else{
+                return;
+            }
+        }
+
+        // Ajouter une nouvelle performance si aucune performance existante ou si l'utilisateur ne souhaite pas modifier
+        if (dparcour.getText().isEmpty() || jTextField1.getText().isEmpty() || Double.parseDouble(dparcour.getText()) < 0 || Double.parseDouble(jTextField1.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir les champs avec des valeurs valides.", "Erreur", JOptionPane.ERROR_MESSAGE);
         } else {
-            User utilisateur = (User) session.get(User.class, u.getId());
             Halterophilie c = new Halterophilie();
             c.setPoidsLeve(Integer.parseInt(dparcour.getText()));
             c.setNombreRepetitions(Integer.parseInt(jTextField1.getText()));
@@ -251,27 +292,25 @@ public class HalterophilieInterface extends javax.swing.JFrame {
             Performances p = new Performances();
             p.setUser(utilisateur);
             p.setSport(c);
-            p.setDate(jCalendar1.getDate());
+            p.setDate(selectedDate);
             session.persist(p);
 
-            utilisateur.getPerformances().add(p); // Ajoutez la performance à la liste de performances de l'utilisateur
-
+            utilisateur.getPerformances().add(p);
             transaction.commit();
             session.close();
-
-            JOptionPane.showMessageDialog(this, "Ajout de la perforMance !", "PerforMates", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Performance ajoutée avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
             afficheTable();
-
-           }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         JfreeChHalterophilie j = new JfreeChHalterophilie(u, true);
         j.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-     
+        JfreeChHalterophilie j = new JfreeChHalterophilie(u, false);
+        j.setVisible(true);
 
     }//GEN-LAST:event_jButton3ActionPerformed
 

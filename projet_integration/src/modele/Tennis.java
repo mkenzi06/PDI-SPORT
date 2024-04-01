@@ -15,8 +15,8 @@ import javax.persistence.*;
 public class Tennis extends Sport {
 
     private int nombreSetsGagnes;
-    private double pourcentagePremiersServicesReussis;
-    private int nombreMoyenVoleesParMatch;
+    private int nombresetsmatch;
+
 
     // Constructeur, getters and setters
     /**
@@ -41,29 +41,64 @@ public class Tennis extends Sport {
     /**
      * @return the pourcentagePremiersServicesReussis
      */
-    public double getPourcentagePremiersServicesReussis() {
-        return pourcentagePremiersServicesReussis;
-    }
+   
 
     /**
      * @param pourcentagePremiersServicesReussis the
      * pourcentagePremiersServicesReussis to set
      */
-    public void setPourcentagePremiersServicesReussis(double pourcentagePremiersServicesReussis) {
-        this.pourcentagePremiersServicesReussis = pourcentagePremiersServicesReussis;
-    }
+  
 
     /**
      * @return the nombreMoyenVoleesParMatch
      */
-    public int getNombreMoyenVoleesParMatch() {
-        return nombreMoyenVoleesParMatch;
-    }
+  
 
     /**
      * @param nombreMoyenVoleesParMatch the nombreMoyenVoleesParMatch to set
      */
-    public void setNombreMoyenVoleesParMatch(int nombreMoyenVoleesParMatch) {
-        this.nombreMoyenVoleesParMatch = nombreMoyenVoleesParMatch;
+   
+        @Override
+    public boolean estCyclisme() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estTennis() {
+        return true; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estWindsurf() {
+       return false;//To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estHalterophilie() {
+       return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estNatation() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean estCap() {
+        return false; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the nombresetsmatch
+     */
+    public int getNombresetsmatch() {
+        return nombresetsmatch;
+    }
+
+    /**
+     * @param nombresetsmatch the nombresetsmatch to set
+     */
+    public void setNombresetsmatch(int nombresetsmatch) {
+        this.nombresetsmatch = nombresetsmatch;
     }
 }
